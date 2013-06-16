@@ -14,11 +14,11 @@ using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace Mangosteen.WheelControl
+namespace Mangosteen.Controls.PathListBox
 {
-    public sealed partial class WheelControl : UserControl
+    public sealed partial class PathListBox : UserControl
     {
-        public WheelControl()
+        public PathListBox()
         {
             this.InitializeComponent();
         }
