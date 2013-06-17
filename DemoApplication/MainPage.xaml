@@ -5,9 +5,15 @@
     xmlns:local="using:DemoApplication"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mango="using:Mangosteen.Panels"
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Grid HorizontalAlignment="Left" Height="400" Margin="209,169,0,0" VerticalAlignment="Top" Width="490">
+            <mango:CircleItemsPanel>
+                
+            </mango:CircleItemsPanel>
+        </Grid>
 
     </Grid>
 </Page>
