@@ -106,7 +106,6 @@
       <DependentUpon>PathListBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Panels\CircleItemsPanel.cs" />
-    <Compile Include="Panels\SimplePanel.cs" />
     <Compile Include="Panels\WheelPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controls\WheelControl\WheelControl.xaml.cs">

@@ -9,11 +9,17 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-        <Grid HorizontalAlignment="Left" Height="400" Margin="209,169,0,0" VerticalAlignment="Top" Width="490">
-            <mango:CircleItemsPanel>
-                
+        <Grid HorizontalAlignment="Left" Height="317" Margin="209,169,0,0" VerticalAlignment="Top" Width="335">
+            <mango:CircleItemsPanel Radius="100" >
+                <Button FontFamily="Buxton Sketch" Content="Button Text" />
+                <Button FontFamily="Buxton Sketch" Content="Button Text" />
+                <Button FontFamily="Buxton Sketch" Content="Button Text" />
+                <Button FontFamily="Buxton Sketch" Content="Button Text" />
+                <Button FontFamily="Buxton Sketch" Content="Button Text" />
             </mango:CircleItemsPanel>
         </Grid>
+
+
 
     </Grid>
 </Page>
