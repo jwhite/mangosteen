@@ -11,6 +11,22 @@ namespace Mangosteen.Panels
 {
     public sealed class WheelPanel : Panel
     {
+        static WheelPanel()
+        {
+            
+        }
+
+        public WheelPanel()
+        {
+            this.SizeChanged += WheelPanel_SizeChanged;
+        }
+
+        void WheelPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // Use actual width and height to determine the radius.
+            double smallestDimension = Math.Min(e.NewSize.Width, e.NewSize.Height);
+            SetValue(RadiusProperty, .5 * smallestDimension);
+        }
         // Properties Width and Height already inherited
 
 
@@ -20,7 +36,6 @@ namespace Mangosteen.Panels
             //set { SetValue(RadiusProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Radius.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty RadiusProperty =
             DependencyProperty.Register("Radius", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
 
