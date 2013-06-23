@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9DFA71C9-A642-4562-90F2-82C294E93B30}</ProjectGuid>
+    <ProjectGuid>{4EBC0D2F-5C4E-4C1C-BCF2-DE781817EBEB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mangosteen.Test</RootNamespace>
@@ -111,6 +111,7 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WheelPanelTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -133,12 +134,6 @@
     <Content Include="Images\UnitTestStoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Mangosteen\Mangosteen.csproj">
-      <Project>{aed474ac-cc3c-4342-a81f-72f169023151}</Project>
-      <Name>Mangosteen</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
