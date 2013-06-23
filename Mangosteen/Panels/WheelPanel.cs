@@ -34,42 +34,89 @@ namespace Mangosteen.Panels
 
         void WheelPanel_Loaded(object sender, RoutedEventArgs e)
         {
+            CreateDesignTimeCanvas();
+        }
+
+        /// <summary>
+        /// Display that will only show up at design time to allow the user to see where the child items will be placed.
+        /// </summary>
+        private void CreateDesignTimeCanvas()
+        {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
-                CreateDesignTimeCanvas();
+                // Add the design time canvas
+                _designTimeCanvas = new Canvas();
+                this.Children.Add(_designTimeCanvas);
+
+                _designTimeCanvas.Children.Clear();
+
+                Ellipse ellipse = new Ellipse();
+                ellipse.Stroke = new SolidColorBrush(Color.FromArgb(255, 25, 162, 222));
+                ellipse.Width = 100;
+                ellipse.Height = 100;
+                _designTimeCanvas.Children.Add(ellipse);
+
+
             }
         }
 
-        private void CreateDesignTimeCanvas()
-        {
-            // Add the design time canvas
-            _designTimeCanvas = new Canvas();
-            this.Children.Add(_designTimeCanvas);
-            Ellipse ellipse = new Ellipse();
-            ellipse.Fill = new SolidColorBrush(Color.FromArgb(255, 25, 162, 222));
-            ellipse.Width = 100;
-            ellipse.Height = 100;
-            _designTimeCanvas.Children.Add(ellipse);
-        }
+        //private void UpdatePath()
+        //{
+        //    //if (_isUpdating)
+        //    //{
+        //    //    return;
+        //    //}
+
+        //    var pathGeometry = new PathGeometry();
+        //    var pathFigure = new PathFigure();
+        //    pathFigure.StartPoint = new Point(Radius, Radius);
+        //    pathFigure.IsClosed = true;
+
+        //    // Starting Point
+        //    var lineSegment =
+        //        new LineSegment
+        //        {
+        //            Point = new Point(
+        //                Radius + Math.Sin(StartAngle * Math.PI / 180) * Radius,
+        //                Radius - Math.Cos(StartAngle * Math.PI / 180) * Radius)
+        //        };
+
+        //    // Arc
+        //    var arcSegment = new ArcSegment();
+        //    arcSegment.IsLargeArc = (EndAngle - StartAngle) >= 180.0;
+        //    arcSegment.Point =
+        //        new Point(
+        //                Radius + Math.Sin(EndAngle * Math.PI / 180) * Radius,
+        //                Radius - Math.Cos(EndAngle * Math.PI / 180) * Radius);
+        //    arcSegment.Size = new Size(Radius, Radius);
+        //    arcSegment.SweepDirection = SweepDirection.Clockwise;
+        //    pathFigure.Segments.Add(lineSegment);
+        //    pathFigure.Segments.Add(arcSegment);
+        //    pathGeometry.Figures.Add(pathFigure);
+        //    //this.Data = pathGeometry;
+        //    //this.InvalidateArrange();
+        //}
 
         void WheelPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             // Use actual width and height to determine the radius.
             double smallestDimension = Math.Min(e.NewSize.Width, e.NewSize.Height);
-            SetValue(RadiusProperty, .5 * smallestDimension);
-
-
+            SetValue(ActualRadiusProperty, .5 * smallestDimension);
         }
 
         // Properties Width and Height already inherited
-        public double Radius
-        {
-            get { return (double)GetValue(RadiusProperty); }
-            //set { SetValue(RadiusProperty, value); }
-        }
 
-        public static readonly DependencyProperty RadiusProperty =
-            DependencyProperty.Register("Radius", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
+
+        //
+        // Dependency properties
+        //
+    
+        public static readonly DependencyProperty ArcDegreesProperty =
+            DependencyProperty.Register("ArcDegrees", typeof(double), typeof(WheelPanel), new PropertyMetadata(360.0));
+
+  
+        public static readonly DependencyProperty ActualRadiusProperty =
+            DependencyProperty.Register("ActualRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
 
         // Overrides
         protected override Size MeasureOverride(Size availableSize)
@@ -123,5 +170,25 @@ namespace Mangosteen.Panels
             //}
             return finalSize;
         }
+
+        //
+        // Back end property stores
+        //
+        #region Property stores
+
+        public double ArcDegrees
+        {
+            get { return (double)GetValue(ArcDegreesProperty); }
+            set { SetValue(ArcDegreesProperty, value); }
+        }
+
+        public double ActualRadius
+        {
+            get { return (double)GetValue(ActualRadiusProperty); }
+            //set { SetValue(RadiusProperty, value); }
+        }
+
+        #endregion
+
     }
 }
