@@ -47,6 +47,8 @@ namespace Mangosteen.Panels
                 // Add the design time canvas
                 _designTimeCanvas = new WheelPanelDesignTimeCanvas(this);
                 _designTimeCanvas.CreateDesignTimeGraphic();
+                _designTimeCanvas.Height = 1000;
+                _designTimeCanvas.Width = 1000;
                 Children.Add(_designTimeCanvas);
             }
         }
