@@ -100,6 +100,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Folder Include="ThirdParty\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\PathListBox\PathListBox.xaml.cs">
@@ -112,8 +113,6 @@
     <Compile Include="Controls\WheelControl\WheelControl.xaml.cs">
       <DependentUpon>WheelControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ThirdParty\PropertyChangedEventSource.cs" />
-    <Compile Include="ThirdParty\RingSlice.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\PathListBox\PathListBox.xaml">

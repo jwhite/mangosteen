@@ -1,5 +1,4 @@
-﻿using Mangosteen.ThirdParty;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,81 +24,89 @@ namespace Mangosteen.Panels
         {
             Children.Clear();
 
-            Ellipse ellipse = new Ellipse();
-            ellipse.Stroke = new SolidColorBrush(Color.FromArgb(255, 25, 162, 222));
-            ellipse.Width = 100;
-            ellipse.Height = 100;
-            Children.Add(ellipse);
-
-            //Line path = new Line();
-            //path.X1 = 0;
-            //path.Y1 = 0;
-            //path.X2 = 100;
-            //path.Y2 = 100;
-            //path.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-            //Children.Add(path);
-
-            Path path2 = new Path();
-            GeometryGroup g = new GeometryGroup();
-            EllipseGeometry e = new EllipseGeometry();
-            e.Center = new Point(10,10);
-            e.RadiusX = 50;
-            e.RadiusY = 50;
-
-
-            g.Children.Add(e);
-            path2.Data = g;
-            path2.Stroke = new SolidColorBrush(Color.FromArgb(255, 0,255, 0));
-            Children.Add(path2);
-
             // Temp properties to test arcs
-            var radius = 100;
+            var outerRadius = 100;
+            var innerRadius = 50;
             var startAngle = 0.0;
-            var endAngle = 90.0;
+            var endAngle = 0.0;
 
             var center = new Point(100, 100);
 
-            // Path geometry contains one or more elements
-            // like PathFigures, Ellipses, or others...
-            var pathGeometry = new PathGeometry();
+
+            var path = new Path();
+
+            path.Stroke = new SolidColorBrush(Colors.Red);
 
             if (startAngle != endAngle)
-            { 
+            {
+                var pathGeometry = new PathGeometry();
+
                 // Pathfigure reprents a connected series of segments
                 var pathFigure = new PathFigure();
+                pathFigure.IsClosed = true;
+                pathFigure.IsFilled = false;
 
-                pathFigure.StartPoint = PointFromAngleRadius(center, startAngle, radius);
+                pathFigure.StartPoint = PointFromAngleRadius(center, startAngle, outerRadius);
                 
                 // Outer arc
                 var outerArcSegment = new ArcSegment();
-                outerArcSegment.Size = new Size(radius, radius);
-                outerArcSegment.Point = PointFromAngleRadius(center, endAngle, radius);
+                outerArcSegment.Size = new Size(outerRadius, outerRadius);
+                outerArcSegment.Point = PointFromAngleRadius(center, endAngle, outerRadius);
                 outerArcSegment.SweepDirection = SweepDirection.Clockwise;
+                outerArcSegment.IsLargeArc = (endAngle - startAngle) >= 180;
 
                 pathFigure.Segments.Add(outerArcSegment);
 
+                // Line to connect the outer segment to the inner segment
+                var lineSegment = new LineSegment()
+                {
+                    Point = PointFromAngleRadius(center, endAngle, innerRadius)
+                };
+                pathFigure.Segments.Add(lineSegment);
+
+                // Inner arc
+                var innerArcSegment = new ArcSegment();
+                innerArcSegment.Size = new Size(innerRadius, innerRadius);
+                innerArcSegment.Point = PointFromAngleRadius(center, startAngle, innerRadius);
+                innerArcSegment.SweepDirection = SweepDirection.Counterclockwise;
+                innerArcSegment.IsLargeArc = (endAngle - startAngle) >= 180;
+
+                pathFigure.Segments.Add(innerArcSegment);
+
                 pathGeometry.Figures.Add(pathFigure);
+
+
+                path.Data = pathGeometry;
 
             } else {
                 // Draw two ellipse
+                var group = new GeometryGroup();
+
+                EllipseGeometry outerEllipse = new EllipseGeometry();
+                outerEllipse.Center = center;
+                outerEllipse.RadiusX = outerRadius;
+                outerEllipse.RadiusY = outerRadius;
+
+                group.Children.Add(outerEllipse);
+
+                EllipseGeometry innerEllipse = new EllipseGeometry();
+                innerEllipse.Center = center;
+                innerEllipse.RadiusX = innerRadius;
+                innerEllipse.RadiusY = innerRadius;
+
+                group.Children.Add(innerEllipse);
+
+                path.Data = group;
 
             }
 
-            var path = new Path();
-            path.Fill = new SolidColorBrush(Colors.White);
-            path.Stroke = new SolidColorBrush(Colors.Red);
-            path.Data = pathGeometry;
-
-            //Children.Add(pathGeometry);
-
-
-            Children.Add(path);
+             Children.Add(path);
         }
 
         public static Point PointFromAngleRadius(Point center, double angle, double radius)
         {
             return new Point(center.X + Math.Sin(angle * Math.PI / 180.0) * radius,
-                             center.Y + Math.Cos(angle * Math.PI / 180.0) * radius);
+                             center.Y - Math.Cos(angle * Math.PI / 180.0) * radius);
         }
     }
 }

@@ -13,7 +13,7 @@
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <Grid HorizontalAlignment="Left" Height="254" Margin="366,256,0,0" VerticalAlignment="Top" Width="309">
 
-            <mango:WheelPanel Height="Auto" Width="Auto" Margin="0,0,130,100" >
+            <mango:WheelPanel Height="Auto" Width="Auto" Margin="0,0,100,50" >
                 <Button Background="Red" FontFamily="Buxton Sketch" Content="Button Text" />
                 <Button Background="Orange" FontFamily="Buxton Sketch" Content="Button Text" />
                 <Button Background="Blue" FontFamily="Buxton Sketch" Content="Button Text" />
@@ -22,9 +22,6 @@
                 <Grid HorizontalAlignment="Left" Height="137" Margin="0,0,-243,-137" VerticalAlignment="Top" Width="243"/>
             </mango:WheelPanel>
         </Grid>
-
-        <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="140" Margin="111,64,0,0" Stroke="Black" VerticalAlignment="Top" Width="142"/>
-        <ThirdParty:RingSlice  Height="215" Width="230" Radius="100" EndAngle="90" InnerRadius="0" Fill="#FFC74A4A"/>
 
 
 
