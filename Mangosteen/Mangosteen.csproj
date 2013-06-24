@@ -112,6 +112,8 @@
     <Compile Include="Controls\WheelControl\WheelControl.xaml.cs">
       <DependentUpon>WheelControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ThirdParty\PropertyChangedEventSource.cs" />
+    <Compile Include="ThirdParty\RingSlice.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\PathListBox\PathListBox.xaml">
