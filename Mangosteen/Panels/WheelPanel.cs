@@ -19,7 +19,7 @@ namespace Mangosteen.Panels
             
         }
 
-        private Canvas _designTimeCanvas;
+        private WheelPanelDesignTimeCanvas _designTimeCanvas;
 
         public WheelPanel() : base()
         {
@@ -45,18 +45,9 @@ namespace Mangosteen.Panels
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 // Add the design time canvas
-                _designTimeCanvas = new Canvas();
-                this.Children.Add(_designTimeCanvas);
-
-                _designTimeCanvas.Children.Clear();
-
-                Ellipse ellipse = new Ellipse();
-                ellipse.Stroke = new SolidColorBrush(Color.FromArgb(255, 25, 162, 222));
-                ellipse.Width = 100;
-                ellipse.Height = 100;
-                _designTimeCanvas.Children.Add(ellipse);
-
-
+                _designTimeCanvas = new WheelPanelDesignTimeCanvas(this);
+                _designTimeCanvas.CreateDesignTimeGraphic();
+                Children.Add(_designTimeCanvas);
             }
         }
 
@@ -110,11 +101,15 @@ namespace Mangosteen.Panels
         //
         // Dependency properties
         //
-    
-        public static readonly DependencyProperty ArcDegreesProperty =
-            DependencyProperty.Register("ArcDegrees", typeof(double), typeof(WheelPanel), new PropertyMetadata(360.0));
 
-  
+            
+        // If start and end degrees match, consider this a full 360 degree circle.
+        public static readonly DependencyProperty StartDegreeProperty =
+            DependencyProperty.Register("StartDegree", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
+
+        public static readonly DependencyProperty EndDegreeProperty =
+            DependencyProperty.Register("EndDegree", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
+
         public static readonly DependencyProperty ActualRadiusProperty =
             DependencyProperty.Register("ActualRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
 
@@ -176,16 +171,21 @@ namespace Mangosteen.Panels
         //
         #region Property stores
 
-        public double ArcDegrees
-        {
-            get { return (double)GetValue(ArcDegreesProperty); }
-            set { SetValue(ArcDegreesProperty, value); }
-        }
-
         public double ActualRadius
         {
             get { return (double)GetValue(ActualRadiusProperty); }
             //set { SetValue(RadiusProperty, value); }
+        }
+
+        public double StartDegree
+        {
+            get { return (double)GetValue(StartDegreeProperty); }
+            set { SetValue(StartDegreeProperty, value); }
+        }
+        public double EndDegree
+        {
+            get { return (double)GetValue(EndDegreeProperty); }
+            set { SetValue(EndDegreeProperty, value); }
         }
 
         #endregion
