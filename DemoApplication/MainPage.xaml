@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mango="using:Mangosteen.Panels"
-    xmlns:ThirdParty="using:Mangosteen.ThirdParty"
+ 
     xmlns:PathListBox="using:Mangosteen.Controls.PathListBox"
     x:Class="DemoApplication.MainPage"
     mc:Ignorable="d">
@@ -13,7 +13,7 @@
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <Grid HorizontalAlignment="Left" Height="254" Margin="366,256,0,0" VerticalAlignment="Top" Width="309">
 
-            <mango:WheelPanel Height="Auto" Width="Auto" Margin="0,0,100,50" >
+            <mango:WheelPanel Height="Auto" Width="Auto" Margin="0,0,75,25" >
                 <Button Background="Red" FontFamily="Buxton Sketch" Content="Button Text" />
                 <Button Background="Orange" FontFamily="Buxton Sketch" Content="Button Text" />
                 <Button Background="Blue" FontFamily="Buxton Sketch" Content="Button Text" />

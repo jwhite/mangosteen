@@ -22,16 +22,17 @@ namespace Mangosteen.Panels
 
         public void CreateDesignTimeGraphic()
         {
+            if (_panel == null) throw new ArgumentNullException();
+
             Children.Clear();
 
             // Temp properties to test arcs
-            var outerRadius = 100;
-            var innerRadius = 50;
-            var startAngle = 0.0;
-            var endAngle = 0.0;
+            var outerRadius = _panel.ActualRadius;
+            var innerRadius = _panel.InnerRadius;
+            var startAngle = _panel.StartAngle;
+            var endAngle = _panel.EndAngle;
 
             var center = new Point(100, 100);
-
 
             var path = new Path();
 
@@ -60,18 +61,22 @@ namespace Mangosteen.Panels
                 // Line to connect the outer segment to the inner segment
                 var lineSegment = new LineSegment()
                 {
-                    Point = PointFromAngleRadius(center, endAngle, innerRadius)
+                    Point = PointFromAngleRadius(center, endAngle, innerRadius == Double.NaN ? 0 : innerRadius)
                 };
                 pathFigure.Segments.Add(lineSegment);
 
-                // Inner arc
-                var innerArcSegment = new ArcSegment();
-                innerArcSegment.Size = new Size(innerRadius, innerRadius);
-                innerArcSegment.Point = PointFromAngleRadius(center, startAngle, innerRadius);
-                innerArcSegment.SweepDirection = SweepDirection.Counterclockwise;
-                innerArcSegment.IsLargeArc = (endAngle - startAngle) >= 180;
+                // Don't draw the inner arc if there is no inner radius, draw a pie-shaped slice
+                if (innerRadius != Double.NaN)
+                {
+                    // Inner arc
+                    var innerArcSegment = new ArcSegment();
+                    innerArcSegment.Size = new Size(innerRadius, innerRadius);
+                    innerArcSegment.Point = PointFromAngleRadius(center, startAngle, innerRadius);
+                    innerArcSegment.SweepDirection = SweepDirection.Counterclockwise;
+                    innerArcSegment.IsLargeArc = (endAngle - startAngle) >= 180;
 
-                pathFigure.Segments.Add(innerArcSegment);
+                    pathFigure.Segments.Add(innerArcSegment); 
+                }
 
                 pathGeometry.Figures.Add(pathFigure);
 
@@ -89,12 +94,15 @@ namespace Mangosteen.Panels
 
                 group.Children.Add(outerEllipse);
 
-                EllipseGeometry innerEllipse = new EllipseGeometry();
-                innerEllipse.Center = center;
-                innerEllipse.RadiusX = innerRadius;
-                innerEllipse.RadiusY = innerRadius;
+                if (innerRadius != Double.NaN)
+                {
+                    EllipseGeometry innerEllipse = new EllipseGeometry();
+                    innerEllipse.Center = center;
+                    innerEllipse.RadiusX = innerRadius;
+                    innerEllipse.RadiusY = innerRadius;
 
-                group.Children.Add(innerEllipse);
+                    group.Children.Add(innerEllipse); 
+                }
 
                 path.Data = group;
 

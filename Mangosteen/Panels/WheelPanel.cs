@@ -106,14 +106,28 @@ namespace Mangosteen.Panels
 
             
         // If start and end degrees match, consider this a full 360 degree circle.
-        public static readonly DependencyProperty StartDegreeProperty =
-            DependencyProperty.Register("StartDegree", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
+        public static readonly DependencyProperty StartAngleProperty =
+            DependencyProperty.Register("StartAngle", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
 
-        public static readonly DependencyProperty EndDegreeProperty =
-            DependencyProperty.Register("EndDegree", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
+        public static readonly DependencyProperty EndAngleProperty =
+            DependencyProperty.Register("EndAngle", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
 
+        public static readonly DependencyProperty InnerRadiusProperty =
+            DependencyProperty.Register("InnerRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
+
+        public static readonly DependencyProperty OuterRadiusProperty =
+            DependencyProperty.Register("OuterRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(Double.NaN));
+
+        // 
+        // Note : Read-Only
+        //
+        // Property determined by either the OuterRadius or the Height/Width after measuring.
+        // If Radius is being used, then it will be non-null, otherwise only use the height and width.
+        //
         public static readonly DependencyProperty ActualRadiusProperty =
             DependencyProperty.Register("ActualRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
+
+        
 
         // Overrides
         protected override Size MeasureOverride(Size availableSize)
@@ -179,15 +193,27 @@ namespace Mangosteen.Panels
             //set { SetValue(RadiusProperty, value); }
         }
 
-        public double StartDegree
+        public double StartAngle
         {
-            get { return (double)GetValue(StartDegreeProperty); }
-            set { SetValue(StartDegreeProperty, value); }
+            get { return (double)GetValue(StartAngleProperty); }
+            set { SetValue(StartAngleProperty, value); }
         }
-        public double EndDegree
+        public double EndAngle
         {
-            get { return (double)GetValue(EndDegreeProperty); }
-            set { SetValue(EndDegreeProperty, value); }
+            get { return (double)GetValue(EndAngleProperty); }
+            set { SetValue(EndAngleProperty, value); }
+        }
+
+        public double InnerRadius
+        {
+            get { return (double)GetValue(InnerRadiusProperty); }
+            set { SetValue(InnerRadiusProperty, value); }
+        }
+
+        public double OuterRadius
+        {
+            get { return (double)GetValue(OuterRadiusProperty); }
+            set { SetValue(OuterRadiusProperty, value); }
         }
 
         #endregion
