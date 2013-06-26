@@ -113,7 +113,6 @@
   <ItemGroup>
     <Compile Include="WheelPanelDesignTimeCanvasTest.cs" />
     <Compile Include="WheelPanelTest.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +134,12 @@
     <Content Include="Images\UnitTestStoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mangosteen\Mangosteen.csproj">
+      <Project>{aed474ac-cc3c-4342-a81f-72f169023151}</Project>
+      <Name>Mangosteen</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
