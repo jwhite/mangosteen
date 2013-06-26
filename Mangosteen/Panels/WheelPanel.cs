@@ -118,6 +118,13 @@ namespace Mangosteen.Panels
         public static readonly DependencyProperty OuterRadiusProperty =
             DependencyProperty.Register("OuterRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(Double.NaN));
 
+        public static readonly DependencyProperty CenterProperty =
+            DependencyProperty.Register("Center", typeof(Point), typeof(WheelPanel), new PropertyMetadata(null));
+
+        
+
+        
+
         // 
         // Note : Read-Only
         //
@@ -214,6 +221,12 @@ namespace Mangosteen.Panels
         {
             get { return (double)GetValue(OuterRadiusProperty); }
             set { SetValue(OuterRadiusProperty, value); }
+        }
+
+        public Point Center
+        {
+            get { return (Point)GetValue(CenterProperty); }
+            set { SetValue(CenterProperty, value); }
         }
 
         #endregion

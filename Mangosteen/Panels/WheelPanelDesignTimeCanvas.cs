@@ -31,8 +31,7 @@ namespace Mangosteen.Panels
             var innerRadius = _panel.InnerRadius;
             var startAngle = _panel.StartAngle;
             var endAngle = _panel.EndAngle;
-
-            var center = new Point(100, 100);
+            var center = _panel.Center;
 
             var path = new Path();
 
@@ -105,7 +104,6 @@ namespace Mangosteen.Panels
                 }
 
                 path.Data = group;
-
             }
 
              Children.Add(path);
