@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Mangosteen.Panels
 {
-    public sealed class WheelPanel : Panel
+    public class WheelPanel : Panel
     {
         static WheelPanel()
         {
