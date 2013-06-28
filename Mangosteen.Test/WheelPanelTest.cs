@@ -4,39 +4,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.UI.Core;
 using Xunit;
 
 namespace Mangosteen.Test
 {
     public class WheelPanelTest
     {
-        WheelPanel _unitPanel;
-
-        public WheelPanelTest()
+        public IAsyncAction ExecuteOnUIThread<TException>(DispatchedHandler action)
+            //where TException : Exception
         {
-            _unitPanel = new WheelPanel();
+            return Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, action);
         }
 
+        WheelPanel _unitPanel;
+
         [Fact]
-        public void WheelPanel_Can_Be_Constructed()
+        public async void WheelPanel_Can_Be_Constructed()
         {
+            await ExecuteOnUIThread<ArgumentException>(() => _unitPanel = new WheelPanel());
             Assert.True(_unitPanel != null);
         }
 
         [Fact]
-        public void WidthHeightSetsRadius()
+        public async Task WidthHeightSetsRadius()
         {
-            _unitPanel.Width = 100;
-            _unitPanel.Height = 100;
-
-            Assert.True(_unitPanel.ActualRadius == 50);
+            await ExecuteOnUIThread<ArgumentException>(() =>
+            {
+                _unitPanel = new WheelPanel();
+                _unitPanel.Width = 100;
+                _unitPanel.Height = 100;
+                Assert.True(_unitPanel.ActualRadius == 50);
+            }); 
         }
 
         [Fact]
-        public void WidthHeightSetsCenter()
+        public async Task WidthHeightSetsCenter()
         {
-            Assert.True(_unitPanel.Center.X == 50 &&
-                        _unitPanel.Center.Y == 50);
+            await ExecuteOnUIThread<ArgumentException>(() =>
+            {
+                Assert.True(_unitPanel.Center.X == 50 &&
+                            _unitPanel.Center.Y == 50);
+            });
         }
     }
 }
