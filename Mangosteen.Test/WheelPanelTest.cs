@@ -8,6 +8,7 @@ using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI.Core;
 using Xunit;
+using Xunit.Extensions;
 
 namespace Mangosteen.Test
 {
@@ -46,15 +47,10 @@ namespace Mangosteen.Test
             }); 
         }
 
-        [Fact]
-        public async Task WidthHeightSetsCenter()
+        [Theory, InlineData(100,100)]
+        public void TestTheory(int width, int height)
         {
-            await ExecuteOnUIThread<ArgumentException>(() =>
-            {
-                _unitPanel = new WheelPanelTestable(100, 100);
-                Assert.True(_unitPanel.Center.X == 50 &&
-                            _unitPanel.Center.Y == 50);
-            });
+            Assert.True(width == height);
         }
     }
 }

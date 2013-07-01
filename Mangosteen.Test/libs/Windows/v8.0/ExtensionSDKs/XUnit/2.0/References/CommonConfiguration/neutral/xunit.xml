@@ -804,9 +804,6 @@
         <member name="M:Xunit.Sdk.Executor.#ctor(System.String)">
             <summary/>
         </member>
-        <member name="M:Xunit.Sdk.Executor.#ctor(System.String,System.Boolean)">
-            <summary/>
-        </member>
         <member name="M:Xunit.Sdk.Executor.InitializeLifetimeService">
             <summary/>
         </member>
