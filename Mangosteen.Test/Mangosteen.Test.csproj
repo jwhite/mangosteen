@@ -120,9 +120,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="Mangosteen.Test_TemporaryKey.pfx" />
-    <None Include="xUnit.runsettings">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\UnitTestLogo.png">
