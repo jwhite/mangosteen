@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<FileList DisplayName= "Mangosteen Control Library" MinVSVersion="11.0">
+  <File Reference="Mangosteen.dll">
+    <ToolboxItems VSCategory= "Control Toolbox Category" />
+  </File>
+</FileList>
