@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangosteen.Test", "Mangosteen.Test\Mangosteen.Test.csproj", "{4EBC0D2F-5C4E-4C1C-BCF2-DE781817EBEB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mangosteen.Design", "Mangosteen.Design\Mangosteen.Design.csproj", "{86B40B5D-0A72-4665-B827-790B9477D945}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AED474AC-CC3C-4342-A81F-72F169023151} = {AED474AC-CC3C-4342-A81F-72F169023151}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
