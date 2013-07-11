@@ -4,25 +4,17 @@
     xmlns:local="using:DemoApplication"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:mango="using:Mangosteen.Panels"
  
-    xmlns:PathListBox="using:Mangosteen.Controls.PathListBox"
+    xmlns:Panels="using:Mangosteen.Panels"
+ 
     x:Class="DemoApplication.MainPage"
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-        <Grid HorizontalAlignment="Left" Height="254" Margin="366,256,0,0" VerticalAlignment="Top" Width="309">
+        <Grid HorizontalAlignment="Left" Height="254" Margin="366,256,0,0" VerticalAlignment="Top" Width="309"/>
 
-            <mango:WheelPanel Height="Auto" Width="Auto" Margin="0,0,75,25" >
-                <Button Background="Red" FontFamily="Buxton Sketch" Content="Button Text" />
-                <Button Background="Orange" FontFamily="Buxton Sketch" Content="Button Text" />
-                <Button Background="Blue" FontFamily="Buxton Sketch" Content="Button Text" />
-                <Button Background="Indigo" FontFamily="Buxton Sketch" Content="Button Text" />
-                <Button Background="Violet" FontFamily="Buxton Sketch" Content="Button Text" />
-                <Grid HorizontalAlignment="Left" Height="137" Margin="0,0,-243,-137" VerticalAlignment="Top" Width="243"/>
-            </mango:WheelPanel>
-        </Grid>
 
+        <Panels:WheelPanel HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100" Margin="549,203,0,0"/>
 
 
     </Grid>
