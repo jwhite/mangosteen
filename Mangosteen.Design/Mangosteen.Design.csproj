@@ -101,9 +101,12 @@
     <Resource Include="SDKManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="TextFile1.txt" />
+    <Resource Include="todo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <SDKReferenceDirectoryRoot>$(ProjectDir)\libs;$(SDKReferenceDirectoryRoot)</SDKReferenceDirectoryRoot>
+  </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>cd "$(ProjectDir)"
 call "$(ProjectDir)CopyToLibs.bat" "$(ProjectDir)" "$(TargetDir)"</PostBuildEvent>

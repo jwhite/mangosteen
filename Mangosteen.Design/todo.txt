@@ -1,0 +1,3 @@
+﻿It would be nice if this was a template that contained a demo windows store page so that we could open
+it and test the designer integration.  As it is, the extension is installed locally so this should
+work if we can make this a windows store dll and still keep it valid.  This requires some investigation.
