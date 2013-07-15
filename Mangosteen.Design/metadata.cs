@@ -1,6 +1,8 @@
-﻿
+﻿//
+// Redefine Win8ControlLibrary to be the namespace of our external WinRT dll.
+//
 extern alias ControlLibrary;
-using Win8ControlLibrary = Mangosteen;
+using Win8ControlLibrary = ControlLibrary::Mangosteen;
 
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,8 @@ using System.Threading.Tasks;
 using Microsoft.Windows.Design.Metadata;
 using Microsoft.Windows.Design.Features;
 using System.ComponentModel;
+using Microsoft.Windows.Design;
+
 
 [assembly: ProvideMetadata(typeof(Mangosteen.Design.Metadata))]
 namespace Mangosteen.Design
@@ -28,7 +32,9 @@ namespace Mangosteen.Design
                 //builder.AddCustomAttributes( typeof(Win8ControlLibrary.RedButton), "CustomCount", new CategoryAttribute("CustomCategory"));
                 //builder.AddCustomAttributes( typeof(Win8ControlLibrary.RedButton), "CustomColor", new CategoryAttribute("CustomCategory"));
                 //builder.AddCustomAttributes( typeof(Win8ControlLibrary.RedButton), "CustomBrush", new CategoryAttribute("CustomCategory"));
-              
+
+                builder.AddCustomAttributes( typeof(Win8ControlLibrary.Panels.WheelPanel), new ToolboxBrowsableAttribute(true));
+
                 return builder.CreateTable();
             }
         }

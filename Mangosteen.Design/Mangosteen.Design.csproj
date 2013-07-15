@@ -38,7 +38,7 @@
   <ItemGroup>
     <Reference Include="Mangosteen">
       <HintPath>..\Mangosteen\bin\x86\Debug\Mangosteen.dll</HintPath>
-      <Aliases>ControlLibrary</Aliases>
+      <Aliases>MetroControlLibrary</Aliases>
       <Private>False</Private>
     </Reference>
     <Reference Include="Windows Metro Runtime">
