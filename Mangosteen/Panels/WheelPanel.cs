@@ -34,7 +34,7 @@ namespace Mangosteen.Panels
 
         void WheelPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            CreateDesignTimeCanvas();
+            //CreateDesignTimeCanvas();
         }
 
         /// <summary>

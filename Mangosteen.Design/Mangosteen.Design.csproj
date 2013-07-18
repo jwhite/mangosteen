@@ -83,11 +83,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="WheelPanel\WheelPanelAdornerProvider.cs" />
+    <Compile Include="WheelPanel\WheelSegmentAdornerPanel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="CopyToLibs.bat" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -96,12 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Mangosteen.Panels.WheelPanel.Icon.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="SDKManifest.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="todo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,8 +1,8 @@
 ﻿//
 // Redefine Win8ControlLibrary to be the namespace of our external WinRT dll.
 //
-extern alias ControlLibrary;
-using Win8ControlLibrary = ControlLibrary::Mangosteen;
+extern alias MetroControlLibrary;
+using Win8ControlLibrary = MetroControlLibrary::Mangosteen;
 
 using System;
 using System.Collections.Generic;
@@ -29,11 +29,25 @@ namespace Mangosteen.Design
                 // 
                 // Custom attributes should be added to the attribute table here.
                 //
-                //builder.AddCustomAttributes( typeof(Win8ControlLibrary.RedButton), "CustomCount", new CategoryAttribute("CustomCategory"));
-                //builder.AddCustomAttributes( typeof(Win8ControlLibrary.RedButton), "CustomColor", new CategoryAttribute("CustomCategory"));
-                //builder.AddCustomAttributes( typeof(Win8ControlLibrary.RedButton), "CustomBrush", new CategoryAttribute("CustomCategory"));
+                
+                //
+                // Make this toolbox browsable
+                builder.AddCustomAttributes(typeof(Win8ControlLibrary.Panels.WheelPanel), new ToolboxBrowsableAttribute(true));
 
-                builder.AddCustomAttributes( typeof(Win8ControlLibrary.Panels.WheelPanel), new ToolboxBrowsableAttribute(true));
+                //
+                // Designer catagories for properties
+                builder.AddCustomAttributes(typeof(Win8ControlLibrary.Panels.WheelPanel), "StartAngle", new CategoryAttribute("Shape"));
+                builder.AddCustomAttributes(typeof(Win8ControlLibrary.Panels.WheelPanel), "EndAngle", new CategoryAttribute("Shape"));
+
+                builder.AddCustomAttributes(typeof(Win8ControlLibrary.Panels.WheelPanel), "InnerRadius", new CategoryAttribute("Shape"));
+                builder.AddCustomAttributes(typeof(Win8ControlLibrary.Panels.WheelPanel), "OuterRadius", new CategoryAttribute("Shape"));
+
+                builder.AddCustomAttributes(typeof(Win8ControlLibrary.Panels.WheelPanel), "Center", CategoryAttribute.Layout);
+                       
+                //
+                // Design time adorner
+                builder.AddCustomAttributes(typeof(Win8ControlLibrary.Panels.WheelPanel),
+                    new FeatureAttribute(typeof(WheelPanelAdornerProvider)));
 
                 return builder.CreateTable();
             }
