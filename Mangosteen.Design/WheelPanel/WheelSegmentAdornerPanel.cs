@@ -6,26 +6,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using Microsoft.Windows.Design.Model;
 
 
-namespace Mangosteen.Design
+namespace Mangosteen.Design.WheelPanel
 {
     class WheelSegmentAdornerPanel : AdornerPanel
     {
-        public WheelSegmentAdornerPanel() 
+        private ModelItem _wheelPanelModelItem;
+
+        public WheelSegmentAdornerPanel(ModelItem item) 
         {
+            _wheelPanelModelItem = item;
             this.Loaded += WheelSegmentAdornerPanel_Loaded;
         }
 
         void WheelSegmentAdornerPanel_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            Button button = new Button();
-            button.Content = "This is my button";
-
-            AdornerPanel.SetAdornerHorizontalAlignment(button, AdornerHorizontalAlignment.Stretch);
-            AdornerPanel.SetAdornerVerticalAlignment(button, AdornerVerticalAlignment.Stretch);
+            WheelPanelDesignTimeCanvas canvas = new WheelPanelDesignTimeCanvas(_wheelPanelModelItem);
             
-            Children.Add(button);
+            AdornerPanel.SetAdornerHorizontalAlignment(canvas, AdornerHorizontalAlignment.Stretch);
+            AdornerPanel.SetAdornerVerticalAlignment(canvas, AdornerVerticalAlignment.Stretch);
+            
+            Children.Add(canvas);
         }
     }
 }

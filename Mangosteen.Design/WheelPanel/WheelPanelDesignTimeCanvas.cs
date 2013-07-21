@@ -1,8 +1,8 @@
 ﻿//
 // Redefine Win8ControlLibrary to be the namespace of our external WinRT dll.
 //
-extern alias MetroControlLibrary;
-using Win8ControlLibrary = MetroControlLibrary::Mangosteen.Panels;
+///extern alias MetroControlLibrary;
+//using Win8ControlLibrary = MetroControlLibrary::Mangosteen.Panels;
 
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows;
+using Microsoft.Windows.Design.Model;
 
 
 
@@ -20,24 +21,27 @@ namespace Mangosteen.Design.WheelPanel
 {
     public class WheelPanelDesignTimeCanvas : Canvas
     {
-        private Win8ControlLibrary.WheelPanel _panel;
-        public WheelPanelDesignTimeCanvas(Win8ControlLibrary.WheelPanel parentPanel)
+        private ModelItem _item;
+
+        public WheelPanelDesignTimeCanvas(ModelItem item)
         {
-            _panel = parentPanel;
+            _item = item;
+
+            CreateDesignTimeGraphic();
         }
 
         public void CreateDesignTimeGraphic()
         {
-            if (_panel == null) throw new ArgumentNullException();
+            if (_item == null) throw new ArgumentNullException();
 
             Children.Clear();
 
             // Temp properties to test arcs
-            var outerRadius = _panel.ActualRadius;
-            var innerRadius = _panel.InnerRadius;
-            var startAngle = _panel.StartAngle;
-            var endAngle = _panel.EndAngle;
-            var center = _panel.Center;
+            double outerRadius = (double)_item.Properties["ActualRadius"].ComputedValue;
+            double innerRadius = (double)_item.Properties["InnerRadius"].ComputedValue;
+            double startAngle =  (double)_item.Properties["StartAngle"].ComputedValue;
+            double endAngle =    (double)_item.Properties["EndAngle"].ComputedValue;
+            Windows.Foundation.Point center = (Windows.Foundation.Point)_item.Properties["Center"].ComputedValue;
 
             var path = new Path();
 
@@ -95,8 +99,8 @@ namespace Mangosteen.Design.WheelPanel
                 var group = new GeometryGroup();
 
                 EllipseGeometry outerEllipse = new EllipseGeometry();
-                outerEllipse.Center = new Point(center.X,center.Y);
-                outerEllipse.RadiusX = outerRadius; 
+                outerEllipse.Center = new Point(center.X, center.Y);
+                outerEllipse.RadiusX = outerRadius;
                 outerEllipse.RadiusY = outerRadius;
 
                 group.Children.Add(outerEllipse);

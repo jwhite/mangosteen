@@ -13,6 +13,7 @@ using Microsoft.Windows.Design.Metadata;
 using Microsoft.Windows.Design.Features;
 using System.ComponentModel;
 using Microsoft.Windows.Design;
+using Mangosteen.Design.WheelPanel;
 
 
 [assembly: ProvideMetadata(typeof(Mangosteen.Design.Metadata))]

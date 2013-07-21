@@ -1,12 +1,16 @@
-﻿using System;
+﻿extern alias MetroControlLibrary;
+using Win8ControlLibrary = MetroControlLibrary::Mangosteen.Panels;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Windows.Design.Interaction;
 using Microsoft.Windows.Design.Model;
+using System.Diagnostics;
 
-namespace Mangosteen.Design
+namespace Mangosteen.Design.WheelPanel
 {
     /// <summary>
     /// The following class implements an adorner provider for WheelPanel
@@ -21,8 +25,10 @@ namespace Mangosteen.Design
 
         protected override void Activate(ModelItem item)
         {
+            //Debugger.Launch();
+
             // Create and add a new adorner panel
-            wheelSegmentsPanel = new WheelSegmentAdornerPanel();
+            wheelSegmentsPanel = new WheelSegmentAdornerPanel(item);
             Adorners.Add(wheelSegmentsPanel);
 
             base.Activate(item);

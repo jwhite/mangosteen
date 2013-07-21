@@ -11,5 +11,6 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Panels:WheelPanel HorizontalAlignment="Left" Height="100" Margin="319,183,0,0" VerticalAlignment="Top" Width="100"/>
     </Grid>
 </Page>
