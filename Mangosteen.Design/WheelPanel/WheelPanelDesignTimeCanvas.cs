@@ -41,7 +41,7 @@ namespace Mangosteen.Design.WheelPanel
             double innerRadius = (double)_item.Properties["InnerRadius"].ComputedValue;
             double startAngle =  (double)_item.Properties["StartAngle"].ComputedValue;
             double endAngle =    (double)_item.Properties["EndAngle"].ComputedValue;
-            Windows.Foundation.Point center = (Windows.Foundation.Point)_item.Properties["Center"].ComputedValue;
+            Point center = DesignerExtentionUtilities.ConvertFromWinRTPoint((Windows.Foundation.Point)_item.Properties["Center"].ComputedValue);
 
             var path = new Path();
 
@@ -121,7 +121,7 @@ namespace Mangosteen.Design.WheelPanel
             Children.Add(path);
         }
 
-        public static Point PointFromAngleRadius(Windows.Foundation.Point center, double angle, double radius)
+        public static Point PointFromAngleRadius(Point center, double angle, double radius)
         {
             return new Point(center.X + Math.Sin(angle * Math.PI / 180.0) * radius,
                              center.Y - Math.Cos(angle * Math.PI / 180.0) * radius);
