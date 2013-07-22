@@ -111,7 +111,6 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WheelPanelDesignTimeCanvasTest.cs" />
     <Compile Include="WheelPanelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -108,7 +108,6 @@
     </Compile>
     <Compile Include="Panels\CircleItemsPanel.cs" />
     <Compile Include="Panels\WheelPanel.cs" />
-    <Compile Include="Panels\WheelPanelDesignTimeCanvas.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controls\WheelControl\WheelControl.xaml.cs">
       <DependentUpon>WheelControl.xaml</DependentUpon>

@@ -53,13 +53,16 @@ namespace Mangosteen.Test
         //
         // Width and height should set the radius unless an outerradius is defined
         //
-        public async Task WidthHeightSetsRadius(double width, double height, double value)
+        public async Task WidthHeightSetsActualRadius(double width, double height, double value)
         {
             await ExecuteOnUIThread<ArgumentException>(() =>
             {
                 _unitPanel = new WheelPanelTestable(width, height);
+                _unitPanel.Width = width;
+
                 Assert.True(_unitPanel.ActualRadius == value);
-            }); 
+            });
+
         }
 
         [Theory]
@@ -91,6 +94,7 @@ namespace Mangosteen.Test
             await ExecuteOnUIThread<ArgumentException>(() =>
             {
                 _unitPanel = new WheelPanelTestable(width, height);
+                _unitPanel.Width = width;
                 _unitPanel.OuterRadius = radius;
                 Assert.True(_unitPanel.ActualRadius == value);
             });
@@ -110,6 +114,26 @@ namespace Mangosteen.Test
                 _unitPanel.OuterRadius = 50;
                 _unitPanel.InnerRadius = innerradius;
                 Assert.True(_unitPanel.InnerRadius == value);
+            });
+        }
+
+        [Theory]
+        [InlineData(0, 180,180)]
+        [InlineData(90, 0, 0)]
+        [InlineData(-180,90,90)]
+        [InlineData(90,-180,90)]
+        //
+        // If the end angle is less then the start angle the end angle must equal the start angle.
+        // TODO : Perhaps rethink this behavior in the future
+        //
+        public async Task EndAngleMustBeGreaterThenStartAngle(double startangle, double endangle, double value)
+        {
+            await ExecuteOnUIThread<ArgumentException>(() =>
+            {
+                _unitPanel = new WheelPanelTestable(100, 100);
+                _unitPanel.StartAngle = startangle;
+                _unitPanel.EndAngle = endangle;
+                Assert.True(_unitPanel.EndAngle == value);
             });
         }
     }

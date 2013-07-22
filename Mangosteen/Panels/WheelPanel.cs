@@ -14,12 +14,12 @@ namespace Mangosteen.Panels
 {
     public class WheelPanel : Panel
     {
-        static WheelPanel()
+        // Need a static constructor to overload dependency properties
+        static WheelPanel() 
         {
             
+                //                .OverrideMetadata(typeof(MyAdvancedStateControl), new PropertyMetadata(true));
         }
-
-        private WheelPanelDesignTimeCanvas _designTimeCanvas;
 
         public WheelPanel() : base()
         {
@@ -34,7 +34,7 @@ namespace Mangosteen.Panels
 
         void WheelPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            //CreateDesignTimeCanvas();
+            
         }
 
         /// <summary>
@@ -44,12 +44,6 @@ namespace Mangosteen.Panels
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
-                // Add the design time canvas
-                _designTimeCanvas = new WheelPanelDesignTimeCanvas(this);
-                _designTimeCanvas.CreateDesignTimeGraphic();
-                _designTimeCanvas.Height = 1000;
-                _designTimeCanvas.Width = 1000;
-                Children.Add(_designTimeCanvas);
             }
         }
 
@@ -121,9 +115,51 @@ namespace Mangosteen.Panels
         public static readonly DependencyProperty CenterProperty =
             DependencyProperty.Register("Center", typeof(Point), typeof(WheelPanel), new PropertyMetadata(null));
 
-        
+        public new static readonly DependencyProperty WidthProperty =
+            DependencyProperty.Register("Width", 
+                                        typeof(double), 
+                                        typeof(WheelPanel), 
+                                        new PropertyMetadata(null, OnWidthChanged));
 
-        
+        public new static readonly DependencyProperty HeightProperty =
+            DependencyProperty.Register("Height",
+                                typeof(double),
+                                typeof(WheelPanel),
+                                new PropertyMetadata(null, OnHeightChanged));
+
+        private static void OnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            // Set width on the base panel 
+            (d as Panel).Width = (double)e.NewValue;
+
+            (d as WheelPanel).Center = CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height);
+            (d as WheelPanel).SetValue(ActualRadiusProperty,CalculateOuterRadius((d as WheelPanel).Width, (d as WheelPanel).Height));
+        }
+
+        private static double CalculateOuterRadius(double width, double height)
+        {
+            return (Math.Min(width, height) / 2.0);
+        }
+
+        private static Point CalculateCenter(double width, double height)
+        {
+            return new Point(width / 2.0, height / 2.0);
+        }
+
+        private static void OnHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            // Set width on the base panel 
+            (d as Panel).Height = (double)e.NewValue;
+
+            (d as WheelPanel).Center = CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height);
+            (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadius((d as WheelPanel).Width, (d as WheelPanel).Height));
+        }
+
+
+        #region DependencyProperty_Changed
+
+        #endregion
+
 
         // 
         // Note : Read-Only
@@ -229,7 +265,18 @@ namespace Mangosteen.Panels
             set { SetValue(CenterProperty, value); }
         }
 
-        #endregion
+        public new double Width
+        {
+            get { return (double)GetValue(WidthProperty); }
+            set { SetValue(WidthProperty, value); }
+        }
 
+        public new double Height
+        {
+            get { return (double)GetValue(HeightProperty); }
+            set { SetValue(HeightProperty, value); }
+        }
+
+        #endregion
     }
 }
