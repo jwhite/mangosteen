@@ -24,7 +24,6 @@ namespace Mangosteen.Test
 
         public WheelPanelTestable(double radius)
         {
-            // TODO: Complete member initialization
             this.radius = radius;
         }
     }
@@ -150,7 +149,54 @@ namespace Mangosteen.Test
                 _unitPanel = new WheelPanelTestable(100, 100);
                 _unitPanel.StartAngle = startangle;
                 _unitPanel.EndAngle = endangle;
-                Assert.True(_unitPanel.EndAngle == value);
+                Assert.True(_unitPanel.EndAngle >= _unitPanel.StartAngle);
+            });
+
+            await ExecuteOnUIThread<ArgumentException>(() =>
+            {
+                _unitPanel = new WheelPanelTestable(100, 100);
+                _unitPanel.EndAngle = endangle;
+                _unitPanel.StartAngle = startangle;
+                Assert.True(_unitPanel.EndAngle >= _unitPanel.StartAngle);
+            });
+        }
+
+        [Theory]
+        [InlineData(0, 180)]
+        [InlineData(90, 0)]
+        [InlineData(-180, 90)]
+        [InlineData(90, -180)]
+        //
+        // If the end angle is less then the start angle the end angle must equal the start angle.
+        // TODO : Perhaps rethink this behavior in the future
+        //
+        public async Task Changing_Size_Does_Not_Change_Radius_If_Set(double outerradius, double value)
+        {
+            await ExecuteOnUIThread<ArgumentException>(() =>
+            {
+                _unitPanel = new WheelPanelTestable(100, 100);
+                _unitPanel.Width = 200;
+                Assert.True(false);
+               // _unitPanel.SizeChanged.
+            });
+        }
+
+        [Theory]
+        [InlineData(100, 50, 25)]
+        [InlineData(50, 100, 25)]
+        [InlineData(200, 200, 100)]
+        //
+        // If the OuterRadius becomes unset, we need to go back to sizing by the width/height
+        //
+        public async Task Unsetting_Outer_Radius_Causes_Setting_By_Size(double width, double height, double value)
+        {
+            await ExecuteOnUIThread<ArgumentException>(() =>
+            {
+                _unitPanel = new WheelPanelTestable(width, height);
+                _unitPanel.OuterRadius = 200;
+                Assert.True(_unitPanel.ActualRadius == 200);
+                _unitPanel.OuterRadius = Double.NaN;
+                Assert.True(_unitPanel.ActualRadius == value);
             });
         }
     }

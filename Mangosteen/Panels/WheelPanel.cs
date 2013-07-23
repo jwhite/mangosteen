@@ -37,9 +37,12 @@ namespace Mangosteen.Panels
 
         void WheelPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            // Use actual width and height to determine the radius.
-            double smallestDimension = Math.Min(e.NewSize.Width, e.NewSize.Height);
-            SetValue(ActualRadiusProperty, .5 * smallestDimension);
+            if (Double.IsNaN(OuterRadius))
+            {
+                // Use actual width and height to determine the radius.
+                double smallestDimension = Math.Min(e.NewSize.Width, e.NewSize.Height);
+                SetValue(ActualRadiusProperty, .5 * smallestDimension);
+            }
         }
 
         //
@@ -48,15 +51,13 @@ namespace Mangosteen.Panels
                     
         // If start and end degrees match, consider this a full 360 degree circle.
         public static readonly DependencyProperty StartAngleProperty =
-            DependencyProperty.Register("StartAngle", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
+            DependencyProperty.Register("StartAngle", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0, OnStartAngleChanged));
 
         public static readonly DependencyProperty EndAngleProperty =
-            DependencyProperty.Register("EndAngle", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
+            DependencyProperty.Register("EndAngle", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0, OnEndAngleChanged));
 
         public static readonly DependencyProperty InnerRadiusProperty =
             DependencyProperty.Register("InnerRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(Double.NaN, OnInnerRadiusChanged));
-
-
 
         public static readonly DependencyProperty OuterRadiusProperty =
             DependencyProperty.Register("OuterRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(Double.NaN, OnOuterRadiusChanged));
@@ -73,12 +74,36 @@ namespace Mangosteen.Panels
         public static readonly DependencyProperty ActualRadiusProperty =
             DependencyProperty.Register("ActualRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(Double.NaN, OnActualRadiusChanged));
 
+
+        private static void OnStartAngleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if ((double)e.NewValue > (d as WheelPanel).EndAngle)
+            {
+                (d as WheelPanel).EndAngle = (double)e.NewValue;
+            }
+        }
+
+        private static void OnEndAngleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if ((d as WheelPanel).StartAngle > (double)e.NewValue)
+            {
+                (d as WheelPanel).StartAngle = (double)e.NewValue;
+            }
+        }
+
         private static void OnOuterRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            // If it is defined set the actual radius directly
             if (!Double.IsNaN((double)e.NewValue))
             {
                 (d as WheelPanel).SetValue(ActualRadiusProperty, (double)e.NewValue);
             }
+            else 
+            { 
+                // Width and height should set it
+                (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
+            }
+
         }
 
         private static void OnInnerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
