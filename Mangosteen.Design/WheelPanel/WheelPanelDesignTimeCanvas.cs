@@ -70,6 +70,7 @@ namespace Mangosteen.Design.WheelPanel
                 pathFigure.IsClosed = true;
                 pathFigure.IsFilled = false;
 
+                // Start at the start angle on the outside
                 pathFigure.StartPoint = PointFromAngleRadius(center, startAngle, outerRadius);
 
                 // Outer arc
@@ -84,12 +85,12 @@ namespace Mangosteen.Design.WheelPanel
                 // Line to connect the outer segment to the inner segment
                 var lineSegment = new LineSegment()
                 {
-                    Point = PointFromAngleRadius(center, endAngle, innerRadius == Double.NaN ? 0 : innerRadius)
+                    Point = PointFromAngleRadius(center, endAngle, Double.IsNaN(innerRadius) ? 0 : innerRadius)
                 };
                 pathFigure.Segments.Add(lineSegment);
 
                 // Don't draw the inner arc if there is no inner radius, draw a pie-shaped slice
-                if (Double.IsNaN(innerRadius))
+                if (!Double.IsNaN(innerRadius))
                 {
                     // Inner arc
                     var innerArcSegment = new ArcSegment();
