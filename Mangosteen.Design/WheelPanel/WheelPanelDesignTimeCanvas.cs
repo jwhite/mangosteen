@@ -17,7 +17,6 @@ using Microsoft.Windows.Design.Model;
 using WinRTPoint = Windows.Foundation.Point;
 
 
-
 namespace Mangosteen.Design.WheelPanel
 {
     public class WheelPanelDesignTimeCanvas : Canvas
@@ -30,20 +29,26 @@ namespace Mangosteen.Design.WheelPanel
 
             this.Loaded += WheelSegmentAdornerPanel_Loaded;
             this.SizeChanged += WheelPanelDesignTimeCanvas_SizeChanged;
- 
+
+            item.PropertyChanged += Item_PropertyChanged;
+        }
+
+        void Item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            UpdateDesignTimeGraphic();
         }
 
         private void WheelSegmentAdornerPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            CreateDesignTimeGraphic();
+            UpdateDesignTimeGraphic();
         }
 
         void WheelPanelDesignTimeCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            CreateDesignTimeGraphic();
+            UpdateDesignTimeGraphic();
         }
 
-        public void CreateDesignTimeGraphic()
+        public void UpdateDesignTimeGraphic()
         {
             if (_item == null) throw new ArgumentNullException();
 
@@ -55,6 +60,7 @@ namespace Mangosteen.Design.WheelPanel
             double startAngle =  (double)_item.Properties["StartAngle"].ComputedValue;
             double endAngle =    (double)_item.Properties["EndAngle"].ComputedValue;
             WinRTPoint rt_center = (WinRTPoint)_item.Properties["Center"].ComputedValue;
+
             Point center = DesignerExtentionUtilities.ConvertFromWinRTPoint(rt_center);
 
             var path = new Path();

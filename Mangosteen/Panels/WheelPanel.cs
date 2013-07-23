@@ -15,81 +15,25 @@ namespace Mangosteen.Panels
 {
     public class WheelPanel : Panel
     {
-        // Need a static constructor to overload dependency properties
-        static WheelPanel() 
-        {
-        }
-
         public WheelPanel() : base()
         {
             // It is not necessary to remove the event listeners when the object goes away
-            this.Loaded += WheelPanel_Loaded;
             this.SizeChanged += WheelPanel_SizeChanged;
 
-            // Adding children here will cause them not to show up in the designer.
-            // I'm not quite sure why.
+            Binding bWidth = new Binding() { Path = new PropertyPath("Width"), Source = this };
+            var widthExProp = DependencyProperty.RegisterAttached("Width", 
+                                typeof(object), 
+                                typeof(UserControl), 
+                                new PropertyMetadata(null, OnWidthChanged));
+            SetBinding(widthExProp, bWidth);
 
-            Binding b = new Binding() { Path = new PropertyPath("Width"), Source = this };
-            var widthExProp = DependencyProperty.RegisterAttached("Width", typeof(object), typeof(UserControl), new PropertyMetadata(null, OnWidthChanged));
-            this.SetBinding(widthExProp, b);
-
-            Binding b2 = new Binding() { Path = new PropertyPath("Height"), Source = this };
-            var heightExProp = DependencyProperty.RegisterAttached("Height", typeof(object), typeof(UserControl), new PropertyMetadata(null, OnHeightChanged));
-            this.SetBinding(heightExProp, b2);
-                       
+            Binding bHeight = new Binding() { Path = new PropertyPath("Height"), Source = this };
+            var heightExProp = DependencyProperty.RegisterAttached("Height", 
+                                typeof(object), 
+                                typeof(UserControl), 
+                                new PropertyMetadata(null, OnHeightChanged));
+            SetBinding(heightExProp, bHeight);
         }
-
-        void WheelPanel_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        /// <summary>
-        /// Display that will only show up at design time to allow the user to see where the child items will be placed.
-        /// </summary>
-        private void CreateDesignTimeCanvas()
-        {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-            }
-        }
-
-        //private void UpdatePath()
-        //{
-        //    //if (_isUpdating)
-        //    //{
-        //    //    return;
-        //    //}
-
-        //    var pathGeometry = new PathGeometry();
-        //    var pathFigure = new PathFigure();
-        //    pathFigure.StartPoint = new Point(Radius, Radius);
-        //    pathFigure.IsClosed = true;
-
-        //    // Starting Point
-        //    var lineSegment =
-        //        new LineSegment
-        //        {
-        //            Point = new Point(
-        //                Radius + Math.Sin(StartAngle * Math.PI / 180) * Radius,
-        //                Radius - Math.Cos(StartAngle * Math.PI / 180) * Radius)
-        //        };
-
-        //    // Arc
-        //    var arcSegment = new ArcSegment();
-        //    arcSegment.IsLargeArc = (EndAngle - StartAngle) >= 180.0;
-        //    arcSegment.Point =
-        //        new Point(
-        //                Radius + Math.Sin(EndAngle * Math.PI / 180) * Radius,
-        //                Radius - Math.Cos(EndAngle * Math.PI / 180) * Radius);
-        //    arcSegment.Size = new Size(Radius, Radius);
-        //    arcSegment.SweepDirection = SweepDirection.Clockwise;
-        //    pathFigure.Segments.Add(lineSegment);
-        //    pathFigure.Segments.Add(arcSegment);
-        //    pathGeometry.Figures.Add(pathFigure);
-        //    //this.Data = pathGeometry;
-        //    //this.InvalidateArrange();
-        //}
 
         void WheelPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -97,9 +41,6 @@ namespace Mangosteen.Panels
             double smallestDimension = Math.Min(e.NewSize.Width, e.NewSize.Height);
             SetValue(ActualRadiusProperty, .5 * smallestDimension);
         }
-
-        // Properties Width and Height already inherited
-
 
         //
         // Dependency properties
@@ -121,12 +62,18 @@ namespace Mangosteen.Panels
         public static readonly DependencyProperty CenterProperty =
             DependencyProperty.Register("Center", typeof(Point), typeof(WheelPanel), new PropertyMetadata(null));
 
+        // 
+        // Note : Read-Only
+        //
+        // Property determined by either the OuterRadius or the Height/Width after measuring.
+        // If Radius is being used, then it will be non-null, otherwise only use the height and width.
+        //
+        public static readonly DependencyProperty ActualRadiusProperty =
+            DependencyProperty.Register("ActualRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
 
         private static void OnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             (d as WheelPanel).Center = CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height);
-
-      
             if (Double.IsNaN((d as WheelPanel).OuterRadius))
             {
                 (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
@@ -145,32 +92,12 @@ namespace Mangosteen.Panels
 
         private static void OnHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            // Set width on the base panel 
-            //(d as Panel).Height = (double)e.NewValue;
-
             (d as WheelPanel).Center = CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height);
             if (Double.IsNaN((d as WheelPanel).OuterRadius))
             {
                 (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
             }
         }
-
-
-        #region DependencyProperty_Changed
-
-        #endregion
-
-
-        // 
-        // Note : Read-Only
-        //
-        // Property determined by either the OuterRadius or the Height/Width after measuring.
-        // If Radius is being used, then it will be non-null, otherwise only use the height and width.
-        //
-        public static readonly DependencyProperty ActualRadiusProperty =
-            DependencyProperty.Register("ActualRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
-
-        
 
         // Overrides
         protected override Size MeasureOverride(Size availableSize)
@@ -230,6 +157,7 @@ namespace Mangosteen.Panels
         //
         #region Property stores
 
+        // Read-only
         public double ActualRadius
         {
             get { return (double)GetValue(ActualRadiusProperty); }
@@ -264,18 +192,6 @@ namespace Mangosteen.Panels
             get { return (Point)GetValue(CenterProperty); }
             set { SetValue(CenterProperty, value); }
         }
-
-        //private double WidthEx
-        //{
-        //    get { return (double)GetValue(WidthExProperty); }
-        //    set { SetValue(WidthExProperty, value); }
-        //}
-
-        //private double HeightEx
-        //{
-        //    get { return (double)GetValue(HeightExProperty); }
-        //    set { SetValue(HeightExProperty, value); }
-        //}
 
         #endregion
     }

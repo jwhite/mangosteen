@@ -93,7 +93,6 @@ namespace Mangosteen.Test
             await ExecuteOnUIThread<ArgumentException>(() =>
             {
                 _unitPanel = new WheelPanelTestable(width, height);
-                _unitPanel.Width = width;
                 _unitPanel.OuterRadius = radius;
                 Assert.True(_unitPanel.ActualRadius == value);
             });
