@@ -53,7 +53,7 @@ namespace Mangosteen.Test
         //
         // Width and height should set the radius unless an outerradius is defined
         //
-        public async Task WidthHeightSetsActualRadius(double width, double height, double value)
+        public async Task Width_Height_Sets_Actual_Radius(double width, double height, double value)
         {
             await ExecuteOnUIThread<ArgumentException>(() =>
             {
@@ -72,7 +72,7 @@ namespace Mangosteen.Test
         //
         // Center should always be at the center of the width and height box.
         //
-        public async Task WidthHeightSetsCenter(double width, double height, double centerx, double centery)
+        public async Task Width_Height_Sets_Center(double width, double height, double centerx, double centery)
         {
             await ExecuteOnUIThread<ArgumentException>(() =>
             {
@@ -88,7 +88,7 @@ namespace Mangosteen.Test
         // The read only property of ActualRadius should be the same as the radius (if set) regardless of the 
         // Width and height.
         //
-        public async Task RadiusSetsActualRadius(double radius, double width, double height, double value)
+        public async Task Radius_Sets_ActualRadius(double radius, double width, double height, double value)
         {
             await ExecuteOnUIThread<ArgumentException>(() =>
             {
@@ -104,7 +104,7 @@ namespace Mangosteen.Test
         //
         // The inner raduis can be 0, but should be bounded by the outer radius.  (It can be no bigger.)
         //
-        public async Task InnerRadiusIsBoundedByOuterRadius(double innerradius, double value)
+        public async Task InnerRadius_Is_Bounded_By_ActualRadius(double innerradius, double value)
         {
             await ExecuteOnUIThread<ArgumentException>(() =>
             {
@@ -112,6 +112,25 @@ namespace Mangosteen.Test
                 _unitPanel.OuterRadius = 50;
                 _unitPanel.InnerRadius = innerradius;
                 Assert.True(_unitPanel.InnerRadius == value);
+            });
+
+            await ExecuteOnUIThread<ArgumentException>(() =>
+            {
+                _unitPanel = new WheelPanelTestable(100, 100);
+                _unitPanel.InnerRadius = innerradius;
+                _unitPanel.OuterRadius = 50;
+                Assert.True(_unitPanel.InnerRadius == value);
+            });
+        }
+
+        [Fact]
+        public async Task InnerRadius_Cant_Be_Negative()
+        {
+            await ExecuteOnUIThread<ArgumentException>(() =>
+            {
+                _unitPanel = new WheelPanelTestable(100, 100);
+                _unitPanel.InnerRadius = -20;
+                Assert.True(_unitPanel.InnerRadius == 0);
             });
         }
 
@@ -124,7 +143,7 @@ namespace Mangosteen.Test
         // If the end angle is less then the start angle the end angle must equal the start angle.
         // TODO : Perhaps rethink this behavior in the future
         //
-        public async Task EndAngleMustBeGreaterThenStartAngle(double startangle, double endangle, double value)
+        public async Task EndAngle_Must_Be_Greater_Then_StartAngle(double startangle, double endangle, double value)
         {
             await ExecuteOnUIThread<ArgumentException>(() =>
             {

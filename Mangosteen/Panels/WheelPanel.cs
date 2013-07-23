@@ -54,10 +54,12 @@ namespace Mangosteen.Panels
             DependencyProperty.Register("EndAngle", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
 
         public static readonly DependencyProperty InnerRadiusProperty =
-            DependencyProperty.Register("InnerRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
+            DependencyProperty.Register("InnerRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(Double.NaN, OnInnerRadiusChanged));
+
+
 
         public static readonly DependencyProperty OuterRadiusProperty =
-            DependencyProperty.Register("OuterRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(Double.NaN));
+            DependencyProperty.Register("OuterRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(Double.NaN, OnOuterRadiusChanged));
 
         public static readonly DependencyProperty CenterProperty =
             DependencyProperty.Register("Center", typeof(Point), typeof(WheelPanel), new PropertyMetadata(null));
@@ -69,7 +71,39 @@ namespace Mangosteen.Panels
         // If Radius is being used, then it will be non-null, otherwise only use the height and width.
         //
         public static readonly DependencyProperty ActualRadiusProperty =
-            DependencyProperty.Register("ActualRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
+            DependencyProperty.Register("ActualRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(Double.NaN, OnActualRadiusChanged));
+
+        private static void OnOuterRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (!Double.IsNaN((double)e.NewValue))
+            {
+                (d as WheelPanel).SetValue(ActualRadiusProperty, (double)e.NewValue);
+            }
+        }
+
+        private static void OnInnerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if ((double)e.NewValue < 0)
+            {
+                (d as WheelPanel).InnerRadius = 0;
+            }
+            else
+            {
+                if ((double)e.NewValue > (d as WheelPanel).ActualRadius)
+                {
+                    (d as WheelPanel).InnerRadius = (d as WheelPanel).ActualRadius;
+                }
+            }
+        }
+
+        private static void OnActualRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            // Coerce the InnerRadius
+            if ((d as WheelPanel).InnerRadius > (double)e.NewValue)
+            {
+                (d as WheelPanel).InnerRadius = (double)e.NewValue;
+            }
+        }
 
         private static void OnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
