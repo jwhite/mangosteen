@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows;
 using Microsoft.Windows.Design.Model;
+using WinRTPoint = Windows.Foundation.Point;
 
 
 
@@ -27,6 +28,18 @@ namespace Mangosteen.Design.WheelPanel
         {
             _item = item;
 
+            this.Loaded += WheelSegmentAdornerPanel_Loaded;
+            this.SizeChanged += WheelPanelDesignTimeCanvas_SizeChanged;
+ 
+        }
+
+        private void WheelSegmentAdornerPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+            CreateDesignTimeGraphic();
+        }
+
+        void WheelPanelDesignTimeCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
             CreateDesignTimeGraphic();
         }
 
@@ -41,8 +54,8 @@ namespace Mangosteen.Design.WheelPanel
             double innerRadius = (double)_item.Properties["InnerRadius"].ComputedValue;
             double startAngle =  (double)_item.Properties["StartAngle"].ComputedValue;
             double endAngle =    (double)_item.Properties["EndAngle"].ComputedValue;
-            Point center = DesignerExtentionUtilities.ConvertFromWinRTPoint(
-                (Windows.Foundation.Point)_item.Properties["Center"].ComputedValue);
+            WinRTPoint rt_center = (WinRTPoint)_item.Properties["Center"].ComputedValue;
+            Point center = DesignerExtentionUtilities.ConvertFromWinRTPoint(rt_center);
 
             var path = new Path();
 
@@ -76,7 +89,7 @@ namespace Mangosteen.Design.WheelPanel
                 pathFigure.Segments.Add(lineSegment);
 
                 // Don't draw the inner arc if there is no inner radius, draw a pie-shaped slice
-                if (innerRadius != Double.NaN)
+                if (Double.IsNaN(innerRadius))
                 {
                     // Inner arc
                     var innerArcSegment = new ArcSegment();
@@ -89,14 +102,11 @@ namespace Mangosteen.Design.WheelPanel
                 }
 
                 pathGeometry.Figures.Add(pathFigure);
-
-
                 path.Data = pathGeometry;
-
             }
             else
             {
-                // Draw two ellipse
+                // Draw two ellipses
                 var group = new GeometryGroup();
 
                 EllipseGeometry outerEllipse = new EllipseGeometry();
@@ -106,7 +116,7 @@ namespace Mangosteen.Design.WheelPanel
 
                 group.Children.Add(outerEllipse);
 
-                if (innerRadius != Double.NaN)
+                if (Double.IsNaN(innerRadius))
                 {
                     EllipseGeometry innerEllipse = new EllipseGeometry();
                     innerEllipse.Center = new Point(center.X, center.Y);

@@ -7,6 +7,7 @@ using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
@@ -17,8 +18,6 @@ namespace Mangosteen.Panels
         // Need a static constructor to overload dependency properties
         static WheelPanel() 
         {
-            
-                //                .OverrideMetadata(typeof(MyAdvancedStateControl), new PropertyMetadata(true));
         }
 
         public WheelPanel() : base()
@@ -29,6 +28,14 @@ namespace Mangosteen.Panels
 
             // Adding children here will cause them not to show up in the designer.
             // I'm not quite sure why.
+
+            Binding b = new Binding() { Path = new PropertyPath("Width"), Source = this };
+            var widthExProp = DependencyProperty.RegisterAttached("Width", typeof(object), typeof(UserControl), new PropertyMetadata(null, OnWidthChanged));
+            this.SetBinding(widthExProp, b);
+
+            Binding b2 = new Binding() { Path = new PropertyPath("Height"), Source = this };
+            var heightExProp = DependencyProperty.RegisterAttached("Height", typeof(object), typeof(UserControl), new PropertyMetadata(null, OnHeightChanged));
+            this.SetBinding(heightExProp, b2);
                        
         }
 
@@ -97,8 +104,7 @@ namespace Mangosteen.Panels
         //
         // Dependency properties
         //
-
-            
+                    
         // If start and end degrees match, consider this a full 360 degree circle.
         public static readonly DependencyProperty StartAngleProperty =
             DependencyProperty.Register("StartAngle", typeof(double), typeof(WheelPanel), new PropertyMetadata(0.0));
@@ -115,28 +121,19 @@ namespace Mangosteen.Panels
         public static readonly DependencyProperty CenterProperty =
             DependencyProperty.Register("Center", typeof(Point), typeof(WheelPanel), new PropertyMetadata(null));
 
-        public new static readonly DependencyProperty WidthProperty =
-            DependencyProperty.Register("Width", 
-                                        typeof(double), 
-                                        typeof(WheelPanel), 
-                                        new PropertyMetadata(null, OnWidthChanged));
-
-        public new static readonly DependencyProperty HeightProperty =
-            DependencyProperty.Register("Height",
-                                typeof(double),
-                                typeof(WheelPanel),
-                                new PropertyMetadata(null, OnHeightChanged));
 
         private static void OnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            // Set width on the base panel 
-            (d as Panel).Width = (double)e.NewValue;
-
             (d as WheelPanel).Center = CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height);
-            (d as WheelPanel).SetValue(ActualRadiusProperty,CalculateOuterRadius((d as WheelPanel).Width, (d as WheelPanel).Height));
+
+      
+            if (Double.IsNaN((d as WheelPanel).OuterRadius))
+            {
+                (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
+            }
         }
 
-        private static double CalculateOuterRadius(double width, double height)
+        private static double CalculateOuterRadiusFromWidthHeight(double width, double height)
         {
             return (Math.Min(width, height) / 2.0);
         }
@@ -149,10 +146,13 @@ namespace Mangosteen.Panels
         private static void OnHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             // Set width on the base panel 
-            (d as Panel).Height = (double)e.NewValue;
+            //(d as Panel).Height = (double)e.NewValue;
 
             (d as WheelPanel).Center = CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height);
-            (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadius((d as WheelPanel).Width, (d as WheelPanel).Height));
+            if (Double.IsNaN((d as WheelPanel).OuterRadius))
+            {
+                (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
+            }
         }
 
 
@@ -265,17 +265,17 @@ namespace Mangosteen.Panels
             set { SetValue(CenterProperty, value); }
         }
 
-        public new double Width
-        {
-            get { return (double)GetValue(WidthProperty); }
-            set { SetValue(WidthProperty, value); }
-        }
+        //private double WidthEx
+        //{
+        //    get { return (double)GetValue(WidthExProperty); }
+        //    set { SetValue(WidthExProperty, value); }
+        //}
 
-        public new double Height
-        {
-            get { return (double)GetValue(HeightProperty); }
-            set { SetValue(HeightProperty, value); }
-        }
+        //private double HeightEx
+        //{
+        //    get { return (double)GetValue(HeightExProperty); }
+        //    set { SetValue(HeightExProperty, value); }
+        //}
 
         #endregion
     }

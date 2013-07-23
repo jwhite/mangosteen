@@ -62,7 +62,6 @@ namespace Mangosteen.Test
 
                 Assert.True(_unitPanel.ActualRadius == value);
             });
-
         }
 
         [Theory]
@@ -86,7 +85,7 @@ namespace Mangosteen.Test
         [InlineData(50, 50, 50, 50)]
         [InlineData(20, 50, 50, 20)]
         //
-        // The read only property of ActualRadius should be set by the radius (if set) regardless of the 
+        // The read only property of ActualRadius should be the same as the radius (if set) regardless of the 
         // Width and height.
         //
         public async Task RadiusSetsActualRadius(double radius, double width, double height, double value)

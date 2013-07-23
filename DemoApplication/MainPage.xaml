@@ -13,5 +13,6 @@
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
 
         <Grid HorizontalAlignment="Left" Height="101" Margin="448,84,0,0" VerticalAlignment="Top" Width="204"/>
+        <Panels:WheelPanel HorizontalAlignment="Left" Height="327" Margin="210,167,0,0" VerticalAlignment="Top" Width="633" RenderTransformOrigin="0.371,0.586" EndAngle="90" InnerRadius="20"/>
     </Grid>
 </Page>

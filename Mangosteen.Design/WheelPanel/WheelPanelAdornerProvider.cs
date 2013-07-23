@@ -25,8 +25,6 @@ namespace Mangosteen.Design.WheelPanel
 
         protected override void Activate(ModelItem item)
         {
-            //Debugger.Launch();
-
             // Create and add a new adorner panel
             wheelSegmentsPanel = new WheelSegmentAdornerPanel(item);
             Adorners.Add(wheelSegmentsPanel);
