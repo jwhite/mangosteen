@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Mangosteen.Panels.WheelPanel">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAMAAQAAQAAoBAgASAQIAAQABAAABSAEACIAIAIAAE=</HashCode>
+      <FileName>Panels\WheelPanel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mangosteen.Panels.Wedge.WedgeDefinition" Collapsed="true">
+    <Position X="4.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Panels\Wedge\WedgeDefinition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mangosteen.Panels.Wedge.WedgeDefinitionCollection" Collapsed="true">
+    <Position X="4.75" Y="1" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEIAAEAAAAAAABAQCAAABAQAAAAAAAAECAAAAABQIAA=</HashCode>
+      <FileName>Panels\Wedge\WedgeDefinitionCollection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Struct Name="Mangosteen.Panels.Wedge.WedgeAngle">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAgABAAAAAEgAAAAAAIAAAAAIEgAAAgACAAAiA=</HashCode>
+      <FileName>Panels\Wedge\WedgeAngle.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Mangosteen.Panels.Wedge.WedgeAngleType" Collapsed="true">
+    <Position X="10" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgEAAACAAAAA=</HashCode>
+      <FileName>Panels\Wedge\WedgeAngle.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
