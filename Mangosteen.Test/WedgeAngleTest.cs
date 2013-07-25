@@ -65,7 +65,7 @@ namespace Mangosteen.Test
             Assert.True(b == expected);
         }
 
-        [Fact]
+        [Theory]
         [InlineData(0, WedgeAngleType.Auto, 0, WedgeAngleType.Auto, true)]
         [InlineData(90, WedgeAngleType.Star, 90, WedgeAngleType.Angle, false)]
         [InlineData(90, WedgeAngleType.Star, 30, WedgeAngleType.Star, false)]
@@ -97,7 +97,7 @@ namespace Mangosteen.Test
         [InlineData(WedgeAngleType.Auto,false)]
         public void WedgeAngle_Is_Angle(WedgeAngleType type, bool expected)
         {
-            WedgeAngle wa = new WedgeAngle(0, WedgeAngleType.Angle);
+            WedgeAngle wa = new WedgeAngle(0, type);
             Assert.True(wa.IsAngle == expected);
         }
 
@@ -107,7 +107,7 @@ namespace Mangosteen.Test
         [InlineData(WedgeAngleType.Auto, false)]
         public void WedgeAngle_Is_Star(WedgeAngleType type, bool expected)
         {
-            WedgeAngle wa = new WedgeAngle(0, WedgeAngleType.Angle);
+            WedgeAngle wa = new WedgeAngle(0, type);
             Assert.True(wa.IsStar == expected);
         }
 
@@ -117,8 +117,51 @@ namespace Mangosteen.Test
         [InlineData(WedgeAngleType.Auto, true)]
         public void WedgeAngle_Is_Auto(WedgeAngleType type, bool expected)
         {
+            WedgeAngle wa = new WedgeAngle(0, type);
+            Assert.True(wa.IsAuto == expected);
+        }
+
+        [Fact]
+        public void WedgeAngle_Equals()
+        {
             WedgeAngle wa = new WedgeAngle(0, WedgeAngleType.Angle);
-            Assert.True(wa.IsAngle == expected);
+            WedgeAngle wa2 = new WedgeAngle(0, WedgeAngleType.Angle);
+            WedgeAngle wa3 = new WedgeAngle(90, WedgeAngleType.Angle);
+            WedgeAngle wa4 = new WedgeAngle(0, WedgeAngleType.Star);
+            Assert.True(wa.Equals(wa2));
+            Assert.False(wa.Equals(wa3));
+            Assert.False(wa.Equals(wa4));
+        }
+
+        [Fact]
+        public void WedgeAngle_Equals_Object()
+        {
+            WedgeAngle wa = new WedgeAngle(0, WedgeAngleType.Angle);
+            WedgeAngle wa2 = new WedgeAngle(0, WedgeAngleType.Angle);
+            Assert.False(wa.Equals(null));
+            Assert.True(wa.Equals((object)wa2));
+        }
+
+        [Fact]
+        public void WedgeAngle_HashCode()
+        {
+            WedgeAngle wa = new WedgeAngle(0, WedgeAngleType.Angle);
+            WedgeAngle wa2 = new WedgeAngle(0, WedgeAngleType.Angle);
+            WedgeAngle wa3 = new WedgeAngle(90, WedgeAngleType.Angle);
+
+            Assert.True(wa.GetHashCode() == wa2.GetHashCode());
+            Assert.False(wa.GetHashCode() == wa3.GetHashCode());
+        }
+
+        [Theory]
+        [InlineData(0, WedgeAngleType.Auto,"Auto")]
+        [InlineData(90, WedgeAngleType.Star,"90*")]
+        [InlineData(180, WedgeAngleType.Angle,"180")]
+        public void WedgeAngle_ToString(double value, WedgeAngleType type, string expected)
+        {
+            WedgeAngle wa = new WedgeAngle(value, type);
+
+            Assert.True(wa.ToString() == expected);
         }
     }
 }
