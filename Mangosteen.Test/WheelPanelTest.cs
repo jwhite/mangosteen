@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Xunit;
 using Xunit.Extensions;
 
@@ -174,10 +176,16 @@ namespace Mangosteen.Test
         {
             await ExecuteOnUIThread<ArgumentException>(() =>
             {
+                var canvas = new Canvas();
+                
                 _unitPanel = new WheelPanelTestable(100, 100);
                 _unitPanel.Width = 200;
+                canvas.Children.Add(_unitPanel);
+                canvas.InvalidateMeasure();
+                canvas.UpdateLayout();
+                
                 Assert.True(false);
-               // _unitPanel.SizeChanged.
+                // _unitPanel.SizeChanged.
             });
         }
 

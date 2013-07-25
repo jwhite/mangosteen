@@ -103,17 +103,18 @@ namespace Mangosteen.Panels
                 // Width and height should set it
                 (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
             }
-
         }
 
         private static void OnInnerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            // Don't let the inner radius be negative
             if ((double)e.NewValue < 0)
             {
                 (d as WheelPanel).InnerRadius = 0;
             }
             else
             {
+                // Don't let the inner radius be greater then the outer radius
                 if ((double)e.NewValue > (d as WheelPanel).ActualRadius)
                 {
                     (d as WheelPanel).InnerRadius = (d as WheelPanel).ActualRadius;
