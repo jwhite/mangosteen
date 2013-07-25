@@ -38,7 +38,7 @@ namespace Mangosteen.Panels.Wedge
         public double Value { get { return Double.NaN; } }
 
         // Tests on the wedge type
-        public bool IsAbsolute { get { return false; } }
+        public bool IsAngle { get { return false; } }
         public bool IsAuto { get { return false; }}
         public bool IsStar { get { return false; }}
 
