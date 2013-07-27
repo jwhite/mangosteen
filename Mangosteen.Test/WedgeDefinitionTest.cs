@@ -28,7 +28,6 @@ namespace Mangosteen.Test
 
                 Assert.True(wd != null);
             });
-
         }
     }
 }

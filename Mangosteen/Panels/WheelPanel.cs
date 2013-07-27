@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using Mangosteen.Panels.Wedge;
 
 namespace Mangosteen.Panels
 {
@@ -64,6 +65,16 @@ namespace Mangosteen.Panels
 
         public static readonly DependencyProperty CenterProperty =
             DependencyProperty.Register("Center", typeof(Point), typeof(WheelPanel), new PropertyMetadata(null));
+
+
+
+
+
+        // Using a DependencyProperty as the backing store for WedgeDefinitions.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty WedgeDefinitionsProperty =
+            DependencyProperty.Register("WedgeDefinitions", typeof(WedgeDefinitionCollection), typeof(WheelPanel), new PropertyMetadata(null));
+
+        
 
         // 
         // Note : Read-Only
@@ -251,6 +262,12 @@ namespace Mangosteen.Panels
         {
             get { return (Point)GetValue(CenterProperty); }
             set { SetValue(CenterProperty, value); }
+        }
+
+        public WedgeDefinitionCollection WedgeDefinitions
+        {
+            get { return (WedgeDefinitionCollection)GetValue(WedgeDefinitionsProperty); }
+            set { SetValue(WedgeDefinitionsProperty, value); }
         }
 
         #endregion

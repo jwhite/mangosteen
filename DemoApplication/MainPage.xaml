@@ -7,12 +7,18 @@
  
     xmlns:Panels="using:Mangosteen.Panels"
  
+    xmlns:Wedge="using:Mangosteen.Panels.Wedge"
+ 
     x:Class="DemoApplication.MainPage"
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
 
         <Grid HorizontalAlignment="Left" Height="101" Margin="448,84,0,0" VerticalAlignment="Top" Width="204"/>
-        <Panels:WheelPanel HorizontalAlignment="Left" Height="281" Margin="293,190,0,0" VerticalAlignment="Top" Width="368" RenderTransformOrigin="0.371,0.586" EndAngle="90" InnerRadius="20"/>
+        <Panels:WheelPanel HorizontalAlignment="Left" Height="281" Margin="293,190,0,0" VerticalAlignment="Top" Width="368" RenderTransformOrigin="0.371,0.586" EndAngle="90" InnerRadius="20">
+            <Panels:WheelPanel.WedgeDefinitions>
+                <Wedge:WedgeDefinition />
+            </Panels:WheelPanel.WedgeDefinitions>
+        </Panels:WheelPanel>
     </Grid>
 </Page>
