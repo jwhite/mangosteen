@@ -115,6 +115,9 @@
     <Compile Include="WedgeDefinitionTest.cs" />
     <Compile Include="WheelPanelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WheelPanelTest_UI.cs" />
+    <Content Include="WheelPanelTest_UI_Sample.cs" />
+    <None Include="XamlUnitTestHelper_Sample.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
