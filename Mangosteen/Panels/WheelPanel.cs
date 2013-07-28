@@ -21,19 +21,48 @@ namespace Mangosteen.Panels
             // It is not necessary to remove the event listeners when the object goes away
             this.SizeChanged += WheelPanel_SizeChanged;
 
+            // Setting the bindings here fails in a non-deterministic manner during the unit test 
+#if false
             Binding bWidth = new Binding() { Path = new PropertyPath("Width"), Source = this };
-            var widthExProp = DependencyProperty.RegisterAttached("Width", 
-                                typeof(object), 
-                                typeof(UserControl), 
+            var widthExProp = DependencyProperty.RegisterAttached("Width",
+                                typeof(object),
+                                typeof(UserControl),
                                 new PropertyMetadata(null, OnWidthChanged));
             SetBinding(widthExProp, bWidth);
 
             Binding bHeight = new Binding() { Path = new PropertyPath("Height"), Source = this };
-            var heightExProp = DependencyProperty.RegisterAttached("Height", 
-                                typeof(object), 
-                                typeof(UserControl), 
+            var heightExProp = DependencyProperty.RegisterAttached("Height",
+                                typeof(object),
+                                typeof(UserControl),
                                 new PropertyMetadata(null, OnHeightChanged));
             SetBinding(heightExProp, bHeight);
+#endif
+
+            this.Loaded += WheelPanel_Loaded;
+        }
+
+        private void WheelPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+            // This never gets called during the unit test.....
+            Binding bWidth = new Binding() { Path = new PropertyPath("Width"), Source = this };
+            var widthExProp = DependencyProperty.RegisterAttached("Width",
+                                typeof(object),
+                                typeof(UserControl),
+                                new PropertyMetadata(null, OnWidthChanged));
+            SetBinding(widthExProp, bWidth);
+
+            Binding bHeight = new Binding() { Path = new PropertyPath("Height"), Source = this };
+            var heightExProp = DependencyProperty.RegisterAttached("Height",
+                                typeof(object),
+                                typeof(UserControl),
+                                new PropertyMetadata(null, OnHeightChanged));
+            SetBinding(heightExProp, bHeight);
+        }
+
+        // This is never called during the UI unit test
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
         }
 
         void WheelPanel_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -63,19 +92,11 @@ namespace Mangosteen.Panels
         public static readonly DependencyProperty OuterRadiusProperty =
             DependencyProperty.Register("OuterRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(Double.NaN, OnOuterRadiusChanged));
 
-        public static readonly DependencyProperty CenterProperty =
-            DependencyProperty.Register("Center", typeof(Point), typeof(WheelPanel), new PropertyMetadata(null));
-
-
-
-
-
         // Using a DependencyProperty as the backing store for WedgeDefinitions.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty WedgeDefinitionsProperty =
             DependencyProperty.Register("WedgeDefinitions", typeof(WedgeDefinitionCollection), typeof(WheelPanel), new PropertyMetadata(null));
 
         
-
         // 
         // Note : Read-Only
         //
@@ -84,6 +105,10 @@ namespace Mangosteen.Panels
         //
         public static readonly DependencyProperty ActualRadiusProperty =
             DependencyProperty.Register("ActualRadius", typeof(double), typeof(WheelPanel), new PropertyMetadata(Double.NaN, OnActualRadiusChanged));
+
+        public static readonly DependencyProperty CenterProperty =
+            DependencyProperty.Register("Center", typeof(Point), typeof(WheelPanel), new PropertyMetadata(null));
+
 
 
         private static void OnStartAngleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -144,7 +169,7 @@ namespace Mangosteen.Panels
 
         private static void OnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as WheelPanel).Center = CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height);
+            (d as WheelPanel).SetValue(CenterProperty, CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height));
             if (Double.IsNaN((d as WheelPanel).OuterRadius))
             {
                 (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
@@ -163,7 +188,7 @@ namespace Mangosteen.Panels
 
         private static void OnHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as WheelPanel).Center = CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height);
+            (d as WheelPanel).SetValue(CenterProperty, CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height));
             if (Double.IsNaN((d as WheelPanel).OuterRadius))
             {
                 (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
@@ -181,47 +206,47 @@ namespace Mangosteen.Panels
             return s;
         }
 
-        protected override Size ArrangeOverride(Size finalSize)
-        {
+        //protected override Size ArrangeOverride(Size finalSize)
+        //{
 
-            //// Clip to ensure items dont override container
-            //this.Clip = new RectangleGeometry { Rect = new Rect(0, 0, finalSize.Width, finalSize.Height) };
+        //    //// Clip to ensure items dont override container
+        //    //this.Clip = new RectangleGeometry { Rect = new Rect(0, 0, finalSize.Width, finalSize.Height) };
 
-            //// Size and position the child elements
-            //int i = 0;
-            //double degreesOffset = 360.0 / this.Children.Count;
+        //    //// Size and position the child elements
+        //    //int i = 0;
+        //    //double degreesOffset = 360.0 / this.Children.Count;
 
-            //foreach (FrameworkElement element in this.Children)
-            //{
-            //    double centerX = element.DesiredSize.Width / 2.0;
-            //    double centerY = element.DesiredSize.Height / 2.0;
+        //    //foreach (FrameworkElement element in this.Children)
+        //    //{
+        //    //    double centerX = element.DesiredSize.Width / 2.0;
+        //    //    double centerY = element.DesiredSize.Height / 2.0;
 
-            //    // calculate the good angle
-            //    double degreesAngle = degreesOffset * i++;
+        //    //    // calculate the good angle
+        //    //    double degreesAngle = degreesOffset * i++;
 
-            //    RotateTransform transform = new RotateTransform();
-            //    transform.CenterX = centerX;
-            //    transform.CenterY = centerY;
-            //    // must be degrees. It's a shame it's not in radian :)
-            //    transform.Angle = degreesAngle;
-            //    element.RenderTransform = transform;
+        //    //    RotateTransform transform = new RotateTransform();
+        //    //    transform.CenterX = centerX;
+        //    //    transform.CenterY = centerY;
+        //    //    // must be degrees. It's a shame it's not in radian :)
+        //    //    transform.Angle = degreesAngle;
+        //    //    element.RenderTransform = transform;
 
-            //    // calculate radian angle
-            //    var radianAngle = (Math.PI * degreesAngle) / 180.0;
+        //    //    // calculate radian angle
+        //    //    var radianAngle = (Math.PI * degreesAngle) / 180.0;
 
-            //    // get x and y
-            //    double x = this.Radius * Math.Cos(radianAngle);
-            //    double y = this.Radius * Math.Sin(radianAngle);
+        //    //    // get x and y
+        //    //    double x = this.Radius * Math.Cos(radianAngle);
+        //    //    double y = this.Radius * Math.Sin(radianAngle);
 
-            //    // get real X and Y (because 0;0 is on top left and not middle of the circle)
-            //    var rectX = x + (finalSize.Width / 2.0) - centerX;
-            //    var rectY = y + (finalSize.Height / 2.0) - centerY;
+        //    //    // get real X and Y (because 0;0 is on top left and not middle of the circle)
+        //    //    var rectX = x + (finalSize.Width / 2.0) - centerX;
+        //    //    var rectY = y + (finalSize.Height / 2.0) - centerY;
 
-            //    // arrange element
-            //    element.Arrange(new Rect(rectX, rectY, element.DesiredSize.Width, element.DesiredSize.Height));
-            //}
-            return finalSize;
-        }
+        //    //    // arrange element
+        //    //    element.Arrange(new Rect(rectX, rectY, element.DesiredSize.Width, element.DesiredSize.Height));
+        //    //}
+        //    return finalSize;
+        //}
 
         //
         // Back end property stores
@@ -261,7 +286,7 @@ namespace Mangosteen.Panels
         public Point Center
         {
             get { return (Point)GetValue(CenterProperty); }
-            set { SetValue(CenterProperty, value); }
+            //set { SetValue(CenterProperty, value); }
         }
 
         public WedgeDefinitionCollection WedgeDefinitions

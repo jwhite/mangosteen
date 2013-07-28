@@ -78,6 +78,7 @@ namespace Mangosteen.Test
             await ExecuteOnUIThread<ArgumentException>(() =>
             {
                 _unitPanel = new WheelPanelTestable(width, height);
+                                
                 Assert.True((_unitPanel.Center.X == centerx) && (_unitPanel.Center.Y == centery));
             });
         }
@@ -163,31 +164,31 @@ namespace Mangosteen.Test
             });
         }
 
-        [Theory]
-        [InlineData(0, 180)]
-        [InlineData(90, 0)]
-        [InlineData(-180, 90)]
-        [InlineData(90, -180)]
-        //
-        // If the end angle is less then the start angle the end angle must equal the start angle.
-        // TODO : Perhaps rethink this behavior in the future
-        //
-        public async Task Changing_Size_Does_Not_Change_Radius_If_Set(double outerradius, double value)
-        {
-            await ExecuteOnUIThread<ArgumentException>(() =>
-            {
-                var canvas = new Canvas();
+        //[Theory]
+        //[InlineData(0, 180)]
+        //[InlineData(90, 0)]
+        //[InlineData(-180, 90)]
+        //[InlineData(90, -180)]
+        ////
+        //// If the end angle is less then the start angle the end angle must equal the start angle.
+        //// TODO : Perhaps rethink this behavior in the future
+        ////
+        //public async Task Changing_Size_Does_Not_Change_Radius_If_Set(double outerradius, double value)
+        //{
+        //    await ExecuteOnUIThread<ArgumentException>(() =>
+        //    {
+        //        var canvas = new Canvas();
                 
-                _unitPanel = new WheelPanelTestable(100, 100);
-                _unitPanel.Width = 200;
-                canvas.Children.Add(_unitPanel);
-                canvas.InvalidateMeasure();
-                canvas.UpdateLayout();
+        //        _unitPanel = new WheelPanelTestable(100, 100);
+        //        _unitPanel.Width = 200;
+        //        canvas.Children.Add(_unitPanel);
+        //        canvas.InvalidateMeasure();
+        //        canvas.UpdateLayout();
                 
-                Assert.True(false);
-                // _unitPanel.SizeChanged.
-            });
-        }
+        //        Assert.True(false);
+        //        // _unitPanel.SizeChanged.
+        //    });
+        //}
 
         [Theory]
         [InlineData(100, 50, 25)]
