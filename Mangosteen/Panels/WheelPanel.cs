@@ -41,22 +41,26 @@ namespace Mangosteen.Panels
             this.Loaded += WheelPanel_Loaded;
         }
 
+        private static readonly DependencyProperty widthExProperty =
+           DependencyProperty.Register(
+               "WidthEx",
+               typeof(object),
+               typeof(WheelPanel),
+               new PropertyMetadata(null, OnWidthChanged));
+
         private void WheelPanel_Loaded(object sender, RoutedEventArgs e)
         {
             // This never gets called during the unit test.....
-            Binding bWidth = new Binding() { Path = new PropertyPath("Width"), Source = this };
-            var widthExProp = DependencyProperty.RegisterAttached("Width",
-                                typeof(object),
-                                typeof(UserControl),
-                                new PropertyMetadata(null, OnWidthChanged));
-            SetBinding(widthExProp, bWidth);
+            //Binding bWidth = new Binding() { Path = new PropertyPath("Width"), Source = (this as Panel), Mode = BindingMode.OneWay };
+            
+            //BindingOperations.SetBinding(this,widthExProperty, bWidth);
 
-            Binding bHeight = new Binding() { Path = new PropertyPath("Height"), Source = this };
-            var heightExProp = DependencyProperty.RegisterAttached("Height",
-                                typeof(object),
-                                typeof(UserControl),
-                                new PropertyMetadata(null, OnHeightChanged));
-            SetBinding(heightExProp, bHeight);
+            ////Binding bHeight = new Binding() { Path = new PropertyPath("Height"), Source = this };
+            ////var heightExProp = DependencyProperty.RegisterAttached("HeightEx",
+            ////                    typeof(object),
+            ////                    typeof(UserControl),
+            ////                    new PropertyMetadata(null, OnHeightChanged));
+            ////SetBinding(heightExProp, bHeight);
         }
 
         // This is never called during the UI unit test
