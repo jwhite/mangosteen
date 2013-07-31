@@ -62,8 +62,7 @@ namespace Mangosteen.Test
             {
                 _unitPanel = new WheelPanelTestable(width, height);
                 _unitPanel.OuterRadius = radius;
-               //Assert.True(_unitPanel.ActualRadius == value);
-                Assert.True(true);
+               Assert.True(_unitPanel.ActualRadius == value);
             });
         }
 

@@ -13,8 +13,13 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Panels:WheelPanel HorizontalAlignment="Left" Height="180" Margin="72,78,0,0" VerticalAlignment="Top" Width="394" InnerRadius="10" EndAngle="90">
+            <Panels:WheelPanel.WedgeDefinitions>
+                <Wedge:WedgeDefinition/>
+                <Wedge:WedgeDefinition/>
+            </Panels:WheelPanel.WedgeDefinitions>
+        </Panels:WheelPanel>
 
-        <Grid HorizontalAlignment="Left" Height="101" Margin="448,84,0,0" VerticalAlignment="Top" Width="204"/>
-    
+
     </Grid>
 </Page>

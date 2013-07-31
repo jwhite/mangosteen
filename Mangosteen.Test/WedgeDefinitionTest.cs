@@ -12,22 +12,25 @@ using Windows.UI.Core;
 
 namespace Mangosteen.Test
 {
-    //public class WedgeDefinitionTest
-    //{
-    //    public IAsyncAction ExecuteOnUIThread<TException>(DispatchedHandler action)
-    //    {
-    //        return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, action);
-    //    }
+#if false
 
-    //    [Fact]
-    //    public async Task WedgeDefinition_Can_Be_Constructed()
-    //    {
-    //        await ExecuteOnUIThread<ArgumentException>(() =>
-    //        {
-    //            WedgeDefinition wd = new WedgeDefinition();
+    public class WedgeDefinitionTest
+    {
+        public IAsyncAction ExecuteOnUIThread<TException>(DispatchedHandler action)
+        {
+            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, action);
+        }
 
-    //            Assert.True(wd != null);
-    //        });
-    //    }
-    //}
+        [Fact]
+        public async Task WedgeDefinition_Can_Be_Constructed()
+        {
+            await ExecuteOnUIThread<ArgumentException>(() =>
+            {
+                WedgeDefinition wd = new WedgeDefinition();
+
+                Assert.True(wd != null);
+            });
+        }
+    }
+#endif
 }

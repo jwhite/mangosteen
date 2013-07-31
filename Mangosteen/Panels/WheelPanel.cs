@@ -41,12 +41,12 @@ namespace Mangosteen.Panels
             this.Loaded += WheelPanel_Loaded;
         }
 
-        private static readonly DependencyProperty widthExProperty =
-           DependencyProperty.Register(
-               "WidthEx",
-               typeof(object),
-               typeof(WheelPanel),
-               new PropertyMetadata(null, OnWidthChanged));
+        //private static readonly DependencyProperty widthExProperty =
+        //   DependencyProperty.Register(
+        //       "WidthEx",
+        //       typeof(object),
+        //       typeof(WheelPanel),
+        //       new PropertyMetadata(null, OnWidthChanged));
 
         private void WheelPanel_Loaded(object sender, RoutedEventArgs e)
         {
@@ -63,14 +63,10 @@ namespace Mangosteen.Panels
             ////SetBinding(heightExProp, bHeight);
         }
 
-        // This is never called during the UI unit test
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-        }
-
         void WheelPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            SetValue(CenterProperty, CalculateCenter(e.NewSize.Width,e.NewSize.Height));
+
             if (Double.IsNaN(OuterRadius))
             {
                 // Use actual width and height to determine the radius.

@@ -66,6 +66,9 @@ namespace Mangosteen.Design.WheelPanel
             var path = new Path();
 
             path.Stroke = new SolidColorBrush(Colors.Red);
+            path.StrokeDashArray = new DoubleCollection(new List<double> { 3, 2 });
+            path.StrokeThickness = 1.0;
+            
 
             if (startAngle != endAngle)
             {
@@ -123,7 +126,7 @@ namespace Mangosteen.Design.WheelPanel
 
                 group.Children.Add(outerEllipse);
 
-                if (Double.IsNaN(innerRadius))
+                if (!Double.IsNaN(innerRadius))
                 {
                     EllipseGeometry innerEllipse = new EllipseGeometry();
                     innerEllipse.Center = new Point(center.X, center.Y);
