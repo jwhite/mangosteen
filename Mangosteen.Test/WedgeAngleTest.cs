@@ -9,8 +9,6 @@ using Mangosteen.Panels.Wedge;
 
 namespace Mangosteen.Test
 {
-#if false
-
     public class WedgeAngleTest
     {
         [Fact]
@@ -166,5 +164,4 @@ namespace Mangosteen.Test
             Assert.True(wa.ToString() == expected);
         }
     }
-#endif
 }

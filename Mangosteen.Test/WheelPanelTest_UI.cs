@@ -22,7 +22,7 @@ namespace Mangosteen.Test
             return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, action);
         }
 
-
+#if false
         [Fact]
         public async Task WheelPanel_Can_Be_Hosted__attempt_crashes_tester()
         {
@@ -42,6 +42,33 @@ namespace Mangosteen.Test
                 Assert.True(true);
             });
         }
+
+        [Theory]
+        [InlineData(0, 180)]
+        [InlineData(90, 0)]
+        [InlineData(-180, 90)]
+        [InlineData(90, -180)]
+        //
+        // If the end angle is less then the start angle the end angle must equal the start angle.
+        // TODO : Perhaps rethink this behavior in the future
+        //
+        public async Task Changing_Size_Does_Not_Change_Radius_If_Set(double outerradius, double value)
+        {
+            await ExecuteOnUIThread<ArgumentException>(() =>
+            {
+                var canvas = new Canvas();
+
+                _unitPanel = new WheelPanelTestable(100, 100);
+                _unitPanel.Width = 200;
+                canvas.Children.Add(_unitPanel);
+                canvas.InvalidateMeasure();
+                canvas.UpdateLayout();
+
+                Assert.True(false);
+                // _unitPanel.SizeChanged.
+            });
+        }
+#endif
 
         //[Theory]
         //[InlineData(100, 100, 50)]

@@ -12,8 +12,6 @@ using Windows.UI.Core;
 
 namespace Mangosteen.Test
 {
-#if false
-
     public class WedgeDefinitionTest
     {
         public IAsyncAction ExecuteOnUIThread<TException>(DispatchedHandler action)
@@ -32,5 +30,4 @@ namespace Mangosteen.Test
             });
         }
     }
-#endif
 }
