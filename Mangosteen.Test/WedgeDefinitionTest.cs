@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Extensions;
-using Mangosteen.Panels.Wedge;
 using Windows.Foundation;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using Mangosteen.Panels;
+using Mangosteen.Panels.Wedge;
 
 namespace Mangosteen.Test
 {

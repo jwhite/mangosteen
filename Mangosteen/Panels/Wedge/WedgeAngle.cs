@@ -20,8 +20,12 @@ namespace Mangosteen.Panels.Wedge
 
     // This class is similar to GridLength used in the Grid control
     // That class is defined in Windows.UI.Xaml
-    public struct WedgeAngle
+    public class WedgeAngle
     {
+        public WedgeAngle()
+        {
+
+        }
         public WedgeAngle(double angle) 
         {
             if (angle < 0) angle = 0;
@@ -33,7 +37,7 @@ namespace Mangosteen.Panels.Wedge
         public WedgeAngle(double value, WedgeAngleType type) 
         {
             if (value < 0) value = 0;
-            if (type == Wedge.WedgeAngleType.Auto) value = 0;
+            if (type == WedgeAngleType.Auto) value = 0;
 
             this._value = value;
             this._wedgeAngleType = type;
@@ -43,6 +47,11 @@ namespace Mangosteen.Panels.Wedge
         public static bool operator !=(WedgeAngle wa1, WedgeAngle wa2) { return !wa1.Equals(wa2); }
         public static bool operator ==(WedgeAngle wa1, WedgeAngle wa2) { return wa1.Equals(wa2); }
 
+        public static implicit operator WedgeAngle(string s)
+        {
+            return new WedgeAngle(10);
+        }
+
         // Static auto
         public static WedgeAngle Auto
         {
@@ -50,16 +59,24 @@ namespace Mangosteen.Panels.Wedge
         }
 
         // Public properties
-        public WedgeAngleType WedgeAngleType { get { return _wedgeAngleType; } }
+        public WedgeAngleType WedgeAngleType
+        {
+            get { return _wedgeAngleType; }
+            set { _wedgeAngleType = value; }
+        }                        
         private WedgeAngleType _wedgeAngleType;
 
-        public double Value { get { return _value; } }
+        public double Value
+        {
+            get { return _value; }
+            set { _value = value; }
+        }
         private double _value;
 
         // Tests on the wedge type
-        public bool IsAngle { get { return (_wedgeAngleType == Wedge.WedgeAngleType.Angle); } }
-        public bool IsAuto { get { return (_wedgeAngleType == Wedge.WedgeAngleType.Auto); } }
-        public bool IsStar { get { return (_wedgeAngleType == Wedge.WedgeAngleType.Star); } }
+        public bool IsAngle { get { return (_wedgeAngleType == WedgeAngleType.Angle); } }
+        public bool IsAuto { get { return (_wedgeAngleType == WedgeAngleType.Auto); } }
+        public bool IsStar { get { return (_wedgeAngleType == WedgeAngleType.Star); } }
 
         // From IEquality
         public bool Equals(WedgeAngle wedgeAngle) { return (_wedgeAngleType == wedgeAngle.WedgeAngleType) && (_value == wedgeAngle.Value); }
@@ -82,13 +99,13 @@ namespace Mangosteen.Panels.Wedge
         {
             switch (_wedgeAngleType)
             {
-                case Wedge.WedgeAngleType.Angle:
+                case WedgeAngleType.Angle:
                     return _value.ToString();
                                     
                 case WedgeAngleType.Star:
                     return _value.ToString() + "*";
                 
-                case Wedge.WedgeAngleType.Auto:
+                case WedgeAngleType.Auto:
                     return "Auto";
                     
                 default :

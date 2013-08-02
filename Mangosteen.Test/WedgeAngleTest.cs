@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Extensions;
+using Mangosteen.Panels;
 using Mangosteen.Panels.Wedge;
 
 namespace Mangosteen.Test

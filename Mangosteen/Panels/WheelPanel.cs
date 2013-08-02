@@ -10,6 +10,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using Mangosteen.Panels;
+using System.Collections.ObjectModel;
 using Mangosteen.Panels.Wedge;
 
 namespace Mangosteen.Panels
@@ -108,7 +110,6 @@ namespace Mangosteen.Panels
 
         public static readonly DependencyProperty CenterProperty =
             DependencyProperty.Register("Center", typeof(Point), typeof(WheelPanel), new PropertyMetadata(null));
-
 
 
         private static void OnStartAngleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -294,6 +295,8 @@ namespace Mangosteen.Panels
             get { return (WedgeDefinitionCollection)GetValue(WedgeDefinitionsProperty); }
             set { SetValue(WedgeDefinitionsProperty, value); }
         }
+
+        
 
         #endregion
     }

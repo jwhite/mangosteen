@@ -14,14 +14,35 @@
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
 
-        <Grid Margin="309,210,671,224">
+        <Grid Margin="339,206,641,228">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="171*"/>
+                <ColumnDefinition Width="215*"/>
+            </Grid.ColumnDefinitions>
 
 
-            <Ellipse Stroke="Red" ></Ellipse>
-            <Button BorderThickness="5" Height="238" Margin="-130,-131,0,227" Width="330" Background="#FFC51F1F"  ></Button>
-
+            <Ellipse Stroke="Red" Margin="-292,-126,77,126" />
+            <Grid HorizontalAlignment="Left" Height="220" Margin="201,0,-353,0" VerticalAlignment="Top" Width="367" Grid.Column="1"/>
         </Grid>
-        <Panels:WheelPanel HorizontalAlignment="Left" Height="383" Margin="417,243,0,0" VerticalAlignment="Top" Width="378" EndAngle="90"/>
+
+        <Panels:WheelPanel HorizontalAlignment="Left" Height="195" Margin="339,228,0,0" VerticalAlignment="Top" Width="259">
+            <Panels:WheelPanel.WedgeDefinitions>
+                <Wedge:WedgeDefinition>
+                    <Wedge:WedgeDefinition.Angle>
+                        <Wedge:WedgeAngle Value="1" WedgeAngleType="Star" />
+                    </Wedge:WedgeDefinition.Angle>
+                </Wedge:WedgeDefinition>
+
+                <Wedge:WedgeDefinition>
+                    <Wedge:WedgeDefinition.Angle>
+                        <Wedge:WedgeAngle Value="1" WedgeAngleType="Star" />
+                    </Wedge:WedgeDefinition.Angle>
+                </Wedge:WedgeDefinition>
+
+            </Panels:WheelPanel.WedgeDefinitions>
+
+
+        </Panels:WheelPanel>
 
     </Grid>
 </Page>
