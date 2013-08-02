@@ -13,13 +13,15 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-        <Panels:WheelPanel HorizontalAlignment="Left" Height="180" Margin="72,78,0,0" VerticalAlignment="Top" Width="394" InnerRadius="10" EndAngle="90">
-            <Panels:WheelPanel.WedgeDefinitions>
-                <Wedge:WedgeDefinition/>
-                <Wedge:WedgeDefinition/>
-            </Panels:WheelPanel.WedgeDefinitions>
-        </Panels:WheelPanel>
 
+        <Grid Margin="309,210,671,224">
+
+
+            <Ellipse Stroke="Red" ></Ellipse>
+            <Button BorderThickness="5" Height="238" Margin="-130,-131,0,227" Width="330" Background="#FFC51F1F"  ></Button>
+
+        </Grid>
+        <Panels:WheelPanel HorizontalAlignment="Left" Height="383" Margin="417,243,0,0" VerticalAlignment="Top" Width="378" EndAngle="90"/>
 
     </Grid>
 </Page>

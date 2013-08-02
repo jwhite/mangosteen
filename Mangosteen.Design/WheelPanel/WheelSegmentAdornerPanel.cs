@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using System.Windows;
 using Microsoft.Windows.Design.Model;
+using System.Windows.Media;
 
 
 namespace Mangosteen.Design.WheelPanel
@@ -23,11 +25,14 @@ namespace Mangosteen.Design.WheelPanel
 
         void WheelSegmentAdornerPanel_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            WheelPanelDesignTimeCanvas canvas = new WheelPanelDesignTimeCanvas(_wheelPanelModelItem);
-            
+            var canvas = new WheelPanelDesignTimeCanvas(_wheelPanelModelItem);
+
             AdornerPanel.SetAdornerHorizontalAlignment(canvas, AdornerHorizontalAlignment.Stretch);
             AdornerPanel.SetAdornerVerticalAlignment(canvas, AdornerVerticalAlignment.Stretch);
-            
+
+            // Placement appears to not be necessary with vertical and horizontal alignment.
+            // But the adorner can be more precisely placed with the AdornerPlacementCollection class.
+
             Children.Add(canvas);
         }
     }

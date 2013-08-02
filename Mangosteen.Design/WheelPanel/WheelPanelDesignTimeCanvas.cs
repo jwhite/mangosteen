@@ -140,6 +140,18 @@ namespace Mangosteen.Design.WheelPanel
             }
 
             Children.Add(path);
+
+            // Transform the path to the displayed area
+            // This needs to be done in case the designer is zoomed in or out.
+            double itemWidth = (double)_item.Properties["ActualWidth"].ComputedValue;
+            double itemHeight = (double)_item.Properties["ActualHeight"].ComputedValue;
+
+            double xScale = ActualWidth / itemWidth;
+            double yScale = ActualHeight / itemHeight;
+
+            var scaleTransform = new ScaleTransform(xScale, yScale);
+
+            path.RenderTransform = scaleTransform;
         }
 
         public static Point PointFromAngleRadius(Point center, double angle, double radius)
