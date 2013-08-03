@@ -108,7 +108,6 @@
     </Compile>
     <Compile Include="Panels\CircleItemsPanel.cs" />
     <Compile Include="Panels\Wedge\WedgeAngle.cs" />
-    <Compile Include="Panels\Wedge\WedgeCalculation.cs" />
     <Compile Include="Panels\Wedge\WedgeDefinition.cs" />
     <Compile Include="Panels\Wedge\WedgeDefinitionCollection.cs" />
     <Compile Include="Panels\WheelPanel.cs" />
