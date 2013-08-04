@@ -22,7 +22,7 @@ namespace Mangosteen.Test
             return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, action);
         }
 
-#if false
+
         [Fact]
         public async Task WheelPanel_Can_Be_Hosted__attempt_crashes_tester()
         {
@@ -33,16 +33,17 @@ namespace Mangosteen.Test
                 Window nonVisibleMainWindow = Windows.UI.Xaml.Window.Current;
                 grid = new Grid { Width = 800, Height = 800 };
                 nonVisibleMainWindow.Content = grid;
-                //nonVisibleMainWindow.Activate();
-                //WheelPanel panel = new WheelPanel();
-                //grid.Children.Add(panel);
-                //grid.UpdateLayout();
+                nonVisibleMainWindow.Activate();
+                WheelPanel panel = new WheelPanel();
+                grid.Children.Add(panel);
+                grid.UpdateLayout();
 
-                //bool test = grid.Children[0].GetType() == typeof(WheelPanel);
-                Assert.True(true);
+                bool test = grid.Children[0].GetType() == typeof(WheelPanel);
+                Assert.True(test);
             });
         }
 
+#if false
         [Theory]
         [InlineData(0, 180)]
         [InlineData(90, 0)]

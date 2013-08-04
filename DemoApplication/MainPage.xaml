@@ -16,13 +16,10 @@
 
         <Grid Margin="339,206,641,228">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="171*"/>
-                <ColumnDefinition Width="215*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-
-
-            <Ellipse Stroke="Red" Margin="-292,-126,77,126" />
-            <Grid HorizontalAlignment="Left" Height="220" Margin="201,0,-353,0" VerticalAlignment="Top" Width="367" Grid.Column="1"/>
+            <Grid HorizontalAlignment="Left" Height="220" Margin="282,-68,-434,0" VerticalAlignment="Top" Width="367" Grid.Column="1"/>
         </Grid>
 
         <Panels:WheelPanel HorizontalAlignment="Left" Height="195" Margin="339,228,0,0" VerticalAlignment="Top" Width="259">
@@ -32,7 +29,6 @@
                         <Wedge:WedgeAngle Value="1" WedgeAngleType="Star" />
                     </Wedge:WedgeDefinition.Angle>
                 </Wedge:WedgeDefinition>
-
                 <Wedge:WedgeDefinition>
                     <Wedge:WedgeDefinition.Angle>
                         <Wedge:WedgeAngle Value="1" WedgeAngleType="Star" />

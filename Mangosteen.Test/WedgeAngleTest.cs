@@ -139,7 +139,8 @@ namespace Mangosteen.Test
         {
             WedgeAngle wa = new WedgeAngle(0, WedgeAngleType.Angle);
             WedgeAngle wa2 = new WedgeAngle(0, WedgeAngleType.Angle);
-            Assert.False(wa.Equals(null));
+            Assert.False(wa.Equals((object)null));
+
             Assert.True(wa.Equals((object)wa2));
         }
 

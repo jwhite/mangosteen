@@ -78,8 +78,6 @@ namespace Mangosteen.Panels.Wedge
         public bool IsAuto { get { return (_wedgeAngleType == WedgeAngleType.Auto); } }
         public bool IsStar { get { return (_wedgeAngleType == WedgeAngleType.Star); } }
 
-        // From IEquality
-        public bool Equals(WedgeAngle wedgeAngle) { return (_wedgeAngleType == wedgeAngle.WedgeAngleType) && (_value == wedgeAngle.Value); }
         public override bool Equals(object oCompare) 
         {
             if (oCompare is WedgeAngle)
