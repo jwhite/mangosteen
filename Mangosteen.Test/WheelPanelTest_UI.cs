@@ -10,6 +10,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
+using WinRTXamlToolkit.AwaitableUI;
 using Xunit;
 using Xunit.Extensions;
 
@@ -22,90 +23,116 @@ namespace Mangosteen.Test
             return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, action);
         }
 
+        private static async Task AwaitableUpdate(FrameworkElement element)
+        {
+            element.UpdateLayout();
+
+            await EventAsync.FromEvent<object>(
+                eh => element.LayoutUpdated += eh,
+                eh => element.LayoutUpdated -= eh
+                );
+        }
+
+        private static WheelPanel CreateAndHostPanel()
+        {
+            Window nonVisibleMainWindow = Windows.UI.Xaml.Window.Current;
+
+            Grid _grid;
+            WheelPanel p;
+
+            _grid = new Grid { Width = 800, Height = 800 };
+            nonVisibleMainWindow.Content = _grid;
+            nonVisibleMainWindow.Activate();
+
+            p = new WheelPanel();
+
+            _grid.Children.Add(p);
+
+            return p;
+        }
 
         [Fact]
-        public async Task WheelPanel_Can_Be_Hosted__attempt_crashes_tester()
+        public async Task WheelPanel_Can_Be_Hosted()
         {
-            Grid grid = null;
-
             await ExecuteOnUIThread<ArgumentException>(() =>
             {
-                Window nonVisibleMainWindow = Windows.UI.Xaml.Window.Current;
-                grid = new Grid { Width = 800, Height = 800 };
-                nonVisibleMainWindow.Content = grid;
-                nonVisibleMainWindow.Activate();
-                WheelPanel panel = new WheelPanel();
-                grid.Children.Add(panel);
-                grid.UpdateLayout();
+                var panel = CreateAndHostPanel();
 
-                bool test = grid.Children[0].GetType() == typeof(WheelPanel);
-                Assert.True(test);
-            });
+                Assert.True(panel != null);
+            }); 
         }
 
-#if false
         [Theory]
-        [InlineData(0, 180)]
-        [InlineData(90, 0)]
-        [InlineData(-180, 90)]
-        [InlineData(90, -180)]
-        //
-        // If the end angle is less then the start angle the end angle must equal the start angle.
-        // TODO : Perhaps rethink this behavior in the future
-        //
-        public async Task Changing_Size_Does_Not_Change_Radius_If_Set(double outerradius, double value)
+        [InlineData(50, 100, 100)]
+        [InlineData(200, 100, 100)]
+        public async Task Changing_Size_Does_Not_Change_Radius_If_Set(double widthheight, double outerradius, double value)
         {
-            await ExecuteOnUIThread<ArgumentException>(() =>
+            await ExecuteOnUIThread<ArgumentException>(async () =>
             {
-                var canvas = new Canvas();
+                var panel = CreateAndHostPanel();
 
-                _unitPanel = new WheelPanelTestable(100, 100);
-                _unitPanel.Width = 200;
-                canvas.Children.Add(_unitPanel);
-                canvas.InvalidateMeasure();
-                canvas.UpdateLayout();
+                panel.Width = 100;
+                panel.Height = 100;
 
-                Assert.True(false);
-                // _unitPanel.SizeChanged.
+                await AwaitableUpdate(panel);
+
+                Assert.True(panel.ActualRadius == 50);
+                
+                panel.OuterRadius = outerradius;
+
+                panel.Width = widthheight;
+                panel.Height = widthheight;
+
+                await AwaitableUpdate(panel);
+
+                Assert.True(panel.ActualRadius == value);
             });
         }
-#endif
 
-        //[Theory]
-        //[InlineData(100, 100, 50)]
-        //[InlineData(200, 200, 100)]
-        //[InlineData(100, 50, 25)]
-        //[InlineData(50, 100, 25)]
-        ////
-        //// Width and height should set the radius unless an outerradius is defined
-        ////
-        //public async Task Width_Height_Sets_Actual_Radius(double width, double height, double value)
-        //{
-        //    await ExecuteOnUIThread<ArgumentException>(() =>
-        //    {
-        //        _unitPanel = new WheelPanelTestable(width, height);
-        //        _unitPanel.Width = width;
+        [Theory]
+        [InlineData(100, 100, 50)]
+        [InlineData(200, 200, 100)]
+        [InlineData(100, 50, 25)]
+        [InlineData(50, 100, 25)]
+        //
+        // Width and height should set the radius unless an outerradius is defined
+        //
+        public async Task Width_Height_Sets_Actual_Radius(double width, double height, double value)
+        {
+            await ExecuteOnUIThread<ArgumentException>(async () =>
+            {
+                var panel = CreateAndHostPanel();
 
-        //        Assert.True(_unitPanel.ActualRadius == value);
-        //    });
-        //}
+                panel.Width = width;
+                panel.Height = height;
 
-        //[Theory]
-        //[InlineData(100, 100, 50, 50)]
-        //[InlineData(200, 200, 100, 100)]
-        //[InlineData(100, 50, 50, 25)]
-        //[InlineData(50, 100, 25, 50)]
-        ////
-        //// Center should always be at the center of the width and height box.
-        ////
-        //public async Task Width_Height_Sets_Center(double width, double height, double centerx, double centery)
-        //{
-        //    await ExecuteOnUIThread<ArgumentException>(() =>
-        //    {
-        //        _unitPanel = new WheelPanelTestable(width, height);
+                await AwaitableUpdate(panel);
 
-        //        Assert.True((_unitPanel.Center.X == centerx) && (_unitPanel.Center.Y == centery));
-        //    });
-        //}
+                Assert.True(panel.ActualRadius == value);
+            });
+        }
+
+        [Theory]
+        [InlineData(100, 100, 50, 50)]
+        [InlineData(200, 200, 100, 100)]
+        [InlineData(100, 50, 50, 25)]
+        [InlineData(50, 100, 25, 50)]
+        //
+        // Center should always be at the center of the width and height box.
+        //
+        public async Task Width_Height_Sets_Center(double width, double height, double centerx, double centery)
+        {
+            await ExecuteOnUIThread<ArgumentException>(async () =>
+            {
+                var panel = CreateAndHostPanel();
+                
+                panel.Width = width;
+                panel.Height = height;
+
+                await AwaitableUpdate(panel);
+
+                Assert.True((panel.Center.X == centerx) && (panel.Center.Y == centery));
+            });
+        }
     }
 }

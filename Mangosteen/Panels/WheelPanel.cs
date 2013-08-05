@@ -18,7 +18,7 @@ namespace Mangosteen.Panels
 {
     public class WheelPanel : Panel
     {
-        public WheelPanel() : base()
+        public WheelPanel()
         {
             // It is not necessary to remove the event listeners when the object goes away
             this.SizeChanged += WheelPanel_SizeChanged;
@@ -39,15 +39,8 @@ namespace Mangosteen.Panels
                                 new PropertyMetadata(null, OnHeightChanged));
             SetBinding(heightExProp, bHeight);
 #endif
-
-            this.Loaded += WheelPanel_Loaded;
         }
 
-
-
-        private void WheelPanel_Loaded(object sender, RoutedEventArgs e)
-        {
-        }
 
         void WheelPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -152,14 +145,14 @@ namespace Mangosteen.Panels
             }
         }
 
-        private static void OnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            (d as WheelPanel).SetValue(CenterProperty, CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height));
-            if (Double.IsNaN((d as WheelPanel).OuterRadius))
-            {
-                (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
-            }
-        }
+        //private static void OnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    (d as WheelPanel).SetValue(CenterProperty, CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height));
+        //    if (Double.IsNaN((d as WheelPanel).OuterRadius))
+        //    {
+        //        (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
+        //    }
+        //}
 
         private static double CalculateOuterRadiusFromWidthHeight(double width, double height)
         {
@@ -171,14 +164,14 @@ namespace Mangosteen.Panels
             return new Point(width / 2.0, height / 2.0);
         }
 
-        private static void OnHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            (d as WheelPanel).SetValue(CenterProperty, CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height));
-            if (Double.IsNaN((d as WheelPanel).OuterRadius))
-            {
-                (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
-            }
-        }
+        //private static void OnHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    (d as WheelPanel).SetValue(CenterProperty, CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height));
+        //    if (Double.IsNaN((d as WheelPanel).OuterRadius))
+        //    {
+        //        (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
+        //    }
+        //}
 
         // Overrides
         protected override Size MeasureOverride(Size availableSize)
