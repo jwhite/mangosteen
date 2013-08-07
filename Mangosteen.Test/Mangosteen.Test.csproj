@@ -114,6 +114,7 @@
     <Compile Include="EventAsync.cs" />
     <Compile Include="WedgeAngleTest.cs" />
     <Compile Include="WedgeDefinitionTest.cs" />
+    <Compile Include="WheelPanelTest_ArrangeAndMeasure.cs" />
     <Compile Include="WheelPanelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WheelPanelTest_UI.cs" />

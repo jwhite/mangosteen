@@ -59,7 +59,9 @@ namespace Mangosteen.Test
                 var panel = CreateAndHostPanel();
 
                 Assert.True(panel != null);
-            }); 
+
+                //CoreApplication.MainView.CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
+            });
         }
 
         [Theory]
@@ -86,7 +88,11 @@ namespace Mangosteen.Test
                 await AwaitableUpdate(panel);
 
                 Assert.True(panel.ActualRadius == value);
+
+                //CoreApplication.MainView.CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
             });
+
+            
         }
 
         [Theory]
@@ -109,7 +115,11 @@ namespace Mangosteen.Test
                 await AwaitableUpdate(panel);
 
                 Assert.True(panel.ActualRadius == value);
+
+                //CoreApplication.MainView.CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
             });
+
+            
         }
 
         [Theory]
@@ -132,7 +142,40 @@ namespace Mangosteen.Test
                 await AwaitableUpdate(panel);
 
                 Assert.True((panel.Center.X == centerx) && (panel.Center.Y == centery));
+
+                //CoreApplication.MainView.CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
             });
+
+            
+
+
+        }
+
+        [Fact]
+        public async Task Can_Add_4_Children()
+        {
+            await ExecuteOnUIThread<ArgumentException>(async () =>
+            {
+                var panel = CreateAndHostPanel();
+
+                Button [] buttons = new Button[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    Button b = new Button();
+                    b.Name = String.Format("Button {0}", i);
+                    panel.Children.Add(b);
+                }
+                                
+                await AwaitableUpdate(panel);
+
+                Assert.True(panel.Children.Count == 4);
+                Assert.True(panel.Children[0].GetType() == typeof(Button));
+
+                //CoreApplication.MainView.CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
+            });
+
+            
+
         }
     }
 }

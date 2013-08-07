@@ -145,15 +145,6 @@ namespace Mangosteen.Panels
             }
         }
 
-        //private static void OnWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    (d as WheelPanel).SetValue(CenterProperty, CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height));
-        //    if (Double.IsNaN((d as WheelPanel).OuterRadius))
-        //    {
-        //        (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
-        //    }
-        //}
-
         private static double CalculateOuterRadiusFromWidthHeight(double width, double height)
         {
             return (Math.Min(width, height) / 2.0);
@@ -164,23 +155,43 @@ namespace Mangosteen.Panels
             return new Point(width / 2.0, height / 2.0);
         }
 
-        //private static void OnHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    (d as WheelPanel).SetValue(CenterProperty, CalculateCenter((d as WheelPanel).Width, (d as WheelPanel).Height));
-        //    if (Double.IsNaN((d as WheelPanel).OuterRadius))
-        //    {
-        //        (d as WheelPanel).SetValue(ActualRadiusProperty, CalculateOuterRadiusFromWidthHeight((d as WheelPanel).Width, (d as WheelPanel).Height));
-        //    }
-        //}
-
         // Overrides
+
+        //
+        // During the measure/arrange pass the WedgeAngleCalculations need to be populated.
+        // 
+        // First, the table needs to be built with the number of elements equal to the smaller of :
+        //    A: The total number of WedgeAngle definitions or 
+        //    B: The number of child elements 
+        // 
+        // Then, if the number of child elements is greater then the number of wege defintions the wedge
+        // definitions are assumed to repeat to cover the whole WedgeAngleCalculations table.
+        //
+        // Next the elements associated with a fixed angle size should be populated with their calculation values.
+        // 
+        // Then, the elements with size 'auto' should be populated based on the size of the child controls.
+        // 
+        // Lastly, the remaining space should be divided up among the star sized controls.
+
+        /// <summary>
+        /// Measures each of the children and reports how much size the panel will require.
+        /// 
+        /// Then, uses the child measurements to build a table for the arrange pass.
+        /// </summary>
+        /// <param name="availableSize">The total amount of space available for the wrap panel.</param>
+        /// <returns>The space required by the panel and all of its child elements</returns>
         protected override Size MeasureOverride(Size availableSize)
         {
             Size s = base.MeasureOverride(availableSize);
 
+            // do something with child.DesiredSize, either sum them directly or apply whatever logic your element has for reinterpreting the child sizes 
+            // if greater than availableSize, must decide what to do and which size to return
             foreach (UIElement element in this.Children)
                 element.Measure(availableSize);
 
+            // desiredSize = ... computed sum of children's DesiredSize ...; 
+            // IMPORTANT: do not allow PositiveInfinity to be returned, that will raise an exception in the caller! 
+            // PositiveInfinity might be an availableSize input; this means that the parent does not care about sizing 
             return s;
         }
 
@@ -229,6 +240,11 @@ namespace Mangosteen.Panels
         //
         // Back end property stores
         //
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            return base.ArrangeOverride(finalSize);
+        }
         #region Property stores
 
         // Read-only
