@@ -18,9 +18,33 @@ namespace Mangosteen.Test
 {
     public class WheelPanelTest_UI
     {
-        public IAsyncAction ExecuteOnUIThread<TException>(DispatchedHandler action)
+        public async Task<object> TestAsserts_Succeeds_Refactor(DispatchedHandler action)
         {
-            return CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, action);
+            IAsyncAction operation = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, action);
+
+            // Task completion source proxy so we can return a task to the test
+            var tcs = new TaskCompletionSource<object>();
+
+            // Callback from the above RunAsync that will get the exception and stick it in our tcs proxy
+            AsyncActionCompletedHandler delegate_completed = delegate(IAsyncAction asyncAction, AsyncStatus asyncStatus)
+            {
+                // Later we will test the other statuses for approprate returns, but now 
+                // we are just trying to solve the exception problem
+                if (asyncStatus == AsyncStatus.Error)
+                {
+                    // Do something here with the exception
+                    tcs.SetException(asyncAction.ErrorCode);
+                }
+                else if (asyncStatus == AsyncStatus.Completed)
+                {
+                    // TCS seems to need to have a result set, and cannot return NULL
+                    tcs.TrySetResult(null);
+                }
+            };
+
+            operation.Completed = delegate_completed;
+
+            return await tcs.Task;
         }
 
         private static async Task AwaitableUpdate(FrameworkElement element)
@@ -54,13 +78,11 @@ namespace Mangosteen.Test
         [Fact]
         public async Task WheelPanel_Can_Be_Hosted()
         {
-            await ExecuteOnUIThread<ArgumentException>(() =>
+            await TestAsserts_Succeeds_Refactor(() =>
             {
                 var panel = CreateAndHostPanel();
 
                 Assert.True(panel != null);
-
-                //CoreApplication.MainView.CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
             });
         }
 
@@ -69,7 +91,7 @@ namespace Mangosteen.Test
         [InlineData(200, 100, 100)]
         public async Task Changing_Size_Does_Not_Change_Radius_If_Set(double widthheight, double outerradius, double value)
         {
-            await ExecuteOnUIThread<ArgumentException>(async () =>
+            await TestAsserts_Succeeds_Refactor(async () =>
             {
                 var panel = CreateAndHostPanel();
 
@@ -88,11 +110,7 @@ namespace Mangosteen.Test
                 await AwaitableUpdate(panel);
 
                 Assert.True(panel.ActualRadius == value);
-
-                //CoreApplication.MainView.CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
             });
-
-            
         }
 
         [Theory]
@@ -105,7 +123,7 @@ namespace Mangosteen.Test
         //
         public async Task Width_Height_Sets_Actual_Radius(double width, double height, double value)
         {
-            await ExecuteOnUIThread<ArgumentException>(async () =>
+            await TestAsserts_Succeeds_Refactor(async () =>
             {
                 var panel = CreateAndHostPanel();
 
@@ -115,11 +133,7 @@ namespace Mangosteen.Test
                 await AwaitableUpdate(panel);
 
                 Assert.True(panel.ActualRadius == value);
-
-                //CoreApplication.MainView.CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
             });
-
-            
         }
 
         [Theory]
@@ -132,7 +146,7 @@ namespace Mangosteen.Test
         //
         public async Task Width_Height_Sets_Center(double width, double height, double centerx, double centery)
         {
-            await ExecuteOnUIThread<ArgumentException>(async () =>
+            await TestAsserts_Succeeds_Refactor(async () =>
             {
                 var panel = CreateAndHostPanel();
                 
@@ -142,40 +156,29 @@ namespace Mangosteen.Test
                 await AwaitableUpdate(panel);
 
                 Assert.True((panel.Center.X == centerx) && (panel.Center.Y == centery));
-
-                //CoreApplication.MainView.CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
             });
-
-            
-
-
         }
 
         [Fact]
         public async Task Can_Add_4_Children()
         {
-            await ExecuteOnUIThread<ArgumentException>(async () =>
+            await TestAsserts_Succeeds_Refactor(async () =>
             {
                 var panel = CreateAndHostPanel();
 
-                Button [] buttons = new Button[4];
+                Button[] buttons = new Button[4];
                 for (int i = 0; i < 4; i++)
                 {
                     Button b = new Button();
                     b.Name = String.Format("Button {0}", i);
                     panel.Children.Add(b);
                 }
-                                
+
                 await AwaitableUpdate(panel);
 
                 Assert.True(panel.Children.Count == 4);
                 Assert.True(panel.Children[0].GetType() == typeof(Button));
-
-                //CoreApplication.MainView.CoreWindow.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
             });
-
-            
-
         }
     }
 }

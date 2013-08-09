@@ -118,6 +118,8 @@
     <Compile Include="WheelPanelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WheelPanelTest_UI.cs" />
+    <Compile Include="WheelPanelTest_UI_Experiments.cs" />
+    <Compile Include="WheelPanelTest_UI_Experiments2.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
