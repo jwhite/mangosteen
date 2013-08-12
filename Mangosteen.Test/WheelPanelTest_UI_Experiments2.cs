@@ -12,6 +12,9 @@ namespace Mangosteen.Test
 {
     public class WheelPanelTest_UI_Experiments2
     {
+
+#if false
+
         // Passing in fuction
         public async Task<object> TestAsserts_Succeeds_refactor(DispatchedHandler action)
         {
@@ -53,5 +56,7 @@ namespace Mangosteen.Test
         {
             await TestAsserts_Succeeds_refactor(() => Assert.True(false));
         }
+#endif
     }
+        
 }

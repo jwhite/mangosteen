@@ -111,6 +111,7 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncHelpers.cs" />
     <Compile Include="EventAsync.cs" />
     <Compile Include="WedgeAngleTest.cs" />
     <Compile Include="WedgeDefinitionTest.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="WheelPanelTest_UI.cs" />
     <Compile Include="WheelPanelTest_UI_Experiments.cs" />
     <Compile Include="WheelPanelTest_UI_Experiments2.cs" />
+    <Compile Include="WheelPanelTest_UI_Experiments3.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

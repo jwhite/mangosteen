@@ -17,6 +17,8 @@ namespace Mangosteen.Test
         /// Now I need to refactor it!
         /// </summary>
         /// <returns></returns>
+#if false
+
         [Fact]
         public async Task<object> TestAsserts_Fails()
         {
@@ -90,10 +92,6 @@ namespace Mangosteen.Test
         //
         // The above works, refactoring below....
         // 
-
-
-
-#if false
 
         public IAsyncAction ExecuteOnUIThread(DispatchedHandler action)
         {
