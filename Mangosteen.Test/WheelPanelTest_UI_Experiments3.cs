@@ -37,7 +37,7 @@ namespace Mangosteen.Test
                 // This will block, awaiting the return from the above task
                 //
                 // Unfortunately, if the above task 'expression' contains an await, for some reason that I don't understand, this will 
-                // return.  How do I fix that?
+                // return.  How do I fix that?  Is this a Microsoft bug or a bug in my implementation?
                 awaiter.GetResult();
 
                 // If there hasn't been a task assertion, need to build a task completion source to return any results
@@ -114,7 +114,7 @@ namespace Mangosteen.Test
         // For some reason that I don't understand the await in the line await Calculate(100,100)
         // triggers a return of the above awaiter.GetResult(); on line 38.
         //
-        // In otherwords, awaiting in a fuction that is currently being waiting on causes it to think it has been returned from
+        // In otherwords, awaiting in a fuction that is currently being waited on causes it to think it has been returned from
         // (whew.) and thus the GetResult call on the awaiter ceases to block and everything returns prematurely.
         //
         // I don't understand this at all.
