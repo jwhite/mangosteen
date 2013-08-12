@@ -76,7 +76,7 @@ namespace Mangosteen.Test
         // This works with the above code in a predictable fashion.
         //
         [Fact]
-        public async Task TestAsserts_Succeeds3()
+        public async Task TestAsserts_Succeeds()
         {
             await UIThread_Awaitable_Dispatch(() => 
             { 
@@ -89,7 +89,7 @@ namespace Mangosteen.Test
         // This works with the above code in a predictable fashion.
         //
         [Fact]
-        public async Task TestAsserts_Fails3()
+        public async Task TestAsserts_Fails()
         {
             await UIThread_Awaitable_Dispatch(() =>
             {
@@ -133,7 +133,7 @@ namespace Mangosteen.Test
 
 
         //
-        // This doesn't work either
+        // This doesn't work either.  It is exiting early, so looking like it succeeds when it does not.
         //
         [Fact]
         public async Task TestAsserts_ContainsAwait_ShouldFail()

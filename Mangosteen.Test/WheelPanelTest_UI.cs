@@ -57,8 +57,6 @@ namespace Mangosteen.Test
 
                 return null;
             });
-
-            
         }
 
         [Theory]
