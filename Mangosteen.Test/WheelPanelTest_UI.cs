@@ -10,22 +10,25 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
-using WinRTXamlToolkit.AwaitableUI;
 using Xunit;
 using Xunit.Extensions;
 
 namespace Mangosteen.Test
 {
+#if false
     public class WheelPanelTest_UI
     {
-        private static async Task AwaitableUpdate(FrameworkElement element)
+        private static async Task<object> AwaitableUpdate(FrameworkElement element)
         {
-            element.UpdateLayout();
-
-            await EventAsync.FromEvent<object>(
+            Task<object> foo = EventAsync.FromEvent<object>(
                 eh => element.LayoutUpdated += eh,
-                eh => element.LayoutUpdated -= eh
+                eh => element.LayoutUpdated -= eh,
+                () => element.UpdateLayout()
                 );
+
+            await foo;
+
+            return foo;
         }
 
         private static WheelPanel CreateAndHostPanel()
@@ -153,13 +156,20 @@ namespace Mangosteen.Test
                     panel.Children.Add(b);
                 }
 
-                await AwaitableUpdate(panel);
+                var task = LayoutUpdatedAsync.UpdateLayoutAsync(panel);
+                if (!task.IsCompleted)
+                {
+                    await task;
+                }
 
                 Assert.True(panel.Children.Count == 4);
                 Assert.True(panel.Children[0].GetType() == typeof(Button));
+
+                Assert.True(false);
 
                 return null;
             });
         }
     }
+#endif
 }

@@ -112,7 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncHelpers.cs" />
-    <Compile Include="EventAsync.cs" />
+    <Compile Include="AsyncHelpersTest.cs" />
     <Compile Include="WedgeAngleTest.cs" />
     <Compile Include="WedgeDefinitionTest.cs" />
     <Compile Include="WheelPanelTest_ArrangeAndMeasure.cs" />

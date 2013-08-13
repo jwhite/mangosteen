@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
@@ -24,7 +25,12 @@ namespace Mangosteen.Test
         {
             try
             {
-                object retval = null;
+                // If there hasn't been a task assertion, need to build a task completion source to return any results
+                // Task completion source proxy so we can return a task to the test
+                // In other words, this task completion source is a proxy that exists to hold return values.
+                var tcs = new TaskCompletionSource<object>();
+
+                Task<object> retval = null;
 
                 // This is how microsoft handles awaiting the task that is passed into runAsync
                 // I have deconstructed it a little for the simple case.
@@ -34,27 +40,45 @@ namespace Mangosteen.Test
 
                 TaskAwaiter awaiter = task.GetAwaiter();
 
-                // This will block, awaiting the return from the above task
-                //
-                // Unfortunately, if the above task 'expression' contains an await, for some reason that I don't understand, this will 
-                // return.  How do I fix that?  Is this a Microsoft bug or a bug in my implementation?
-                awaiter.GetResult();
-
-                // If there hasn't been a task assertion, need to build a task completion source to return any results
-                // Task completion source proxy so we can return a task to the test
-
-                // In other words, this task completion source is a proxy that exists to hold return values.
-                var tcs = new TaskCompletionSource<object>();
-
-                // TCS seems to need to have a result set, 
-                if (awaiter.IsCompleted)
+                if (!task.IsCompleted)
                 {
-                    // This block will execute on the Assert.True(true) case
-                    // or any time there is no assertion.
-                    tcs.TrySetResult(retval);
+                    // This will block, awaiting the return from the above task
+                    SpinWait.SpinUntil(() => awaiter.IsCompleted);
 
-                    return tcs.Task;
+                    //
+                    // Unfortunately, if the above task 'expression' contains an await, for some reason that I don't understand, this will 
+                    // return.  How do I fix that?
+                    awaiter.GetResult();
+
+                    // TCS seems to need to have a result set, 
+                    if (awaiter.IsCompleted)
+                    {
+                        if (retval == null || !retval.IsFaulted)
+                        {
+                            // This block will execute on the Assert.True(true) case
+                            // or any time there is no assertion.
+                            tcs.TrySetResult(retval);
+                        }
+                        else if (retval.IsFaulted)
+                        {
+                            tcs.TrySetException(retval.Exception);
+                        }
+                    }
                 }
+                else
+                {
+                    // This is the case where the task completes immediately
+                    if (!task.IsFaulted)
+                    {
+                        tcs.TrySetResult(retval);
+                    }
+                    else
+                    {
+                        tcs.TrySetException(task.Exception);
+                    }
+                }
+                
+                return tcs.Task;
             }
             catch (Exception e)
             {
@@ -68,15 +92,13 @@ namespace Mangosteen.Test
 
                 return tcs.Task;
             }
-
-            return null;
         }
 
         //
         // This works with the above code in a predictable fashion.
         //
         [Fact]
-        public async Task TestAsserts_Succeeds()
+        public async Task TestAsserts_Should_Succeed()
         {
             await UIThread_Awaitable_Dispatch(() => 
             { 
@@ -89,7 +111,7 @@ namespace Mangosteen.Test
         // This works with the above code in a predictable fashion.
         //
         [Fact]
-        public async Task TestAsserts_Fails()
+        public async Task TestAsserts_Should_Fail()
         {
             await UIThread_Awaitable_Dispatch(() =>
             {
@@ -104,23 +126,13 @@ namespace Mangosteen.Test
         //
         private async Task<int> Calculate(int number1, int number2)
         {
-            await Task.Delay(2000);
+            Task.Delay(2000).Wait();
+
             return number1 + number2;
         }
 
-        //
-        // This does not work!!!!  It appears to but it does not.
-        //
-        // For some reason that I don't understand the await in the line await Calculate(100,100)
-        // triggers a return of the above awaiter.GetResult(); on line 38.
-        //
-        // In otherwords, awaiting in a fuction that is currently being waited on causes it to think it has been returned from
-        // (whew.) and thus the GetResult call on the awaiter ceases to block and everything returns prematurely.
-        //
-        // I don't understand this at all.
-        //
         [Fact]
-        public async Task TestAsserts_ContainsAwait()
+        public async Task TestAsserts_ContainsAwait_ShouldSucceed()
         {
             await UIThread_Awaitable_Dispatch(async () =>
             {
@@ -131,9 +143,8 @@ namespace Mangosteen.Test
             });
         }
 
-
         //
-        // This doesn't work either.  It is exiting early, so looking like it succeeds when it does not.
+        // This doesn't work either
         //
         [Fact]
         public async Task TestAsserts_ContainsAwait_ShouldFail()

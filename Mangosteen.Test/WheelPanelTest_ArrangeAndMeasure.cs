@@ -9,23 +9,15 @@ using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinRTXamlToolkit.AwaitableUI;
 using Xunit;
 using Xunit.Extensions;
 
 namespace Mangosteen.Test
 {
+#if false   
     public class WheelPanelTest_ArrangeAndMeasure
     {
-        private static async Task AwaitableUpdate(FrameworkElement element)
-        {
-            element.UpdateLayout();
 
-            await EventAsync.FromEvent<object>(
-                eh => element.LayoutUpdated += eh,
-                eh => element.LayoutUpdated -= eh
-                );
-        }
 
         private static WheelPanel CreateAndHostPanel_180Degrees_ChildButtons()
         {
@@ -73,4 +65,5 @@ namespace Mangosteen.Test
             return p;
         }
     }
+#endif
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -15,17 +16,23 @@ namespace Mangosteen.Test
 {
     public static class AsyncHelpers
     {
+        // This is a delegate that exists so I can pass in a lambda in the form of () => { do some stuff; }
+        // Unfortunately, because it has to be Task<object> so that there is a return value, the 
+        // passed in lambda MUST have a return null at the end of it.
         //
-        // Microsoft solves this problem of awaiting a RunAsync call by converting to a task, then to an awaiter, and using that
-
-        // For some reason that I don't understand, if there is an await call 
+        // Haven't found a workaround for this yet.
         public delegate Task<object> ActionDelegate();
 
         public static Task<object> UIThread_Awaitable_Dispatch(ActionDelegate expression)
         {
             try
             {
-                object retval = null;
+                // If there hasn't been a task assertion, need to build a task completion source to return any results
+                // Task completion source proxy so we can return a task to the test
+                // In other words, this task completion source is a proxy that exists to hold return values.
+                var tcs = new TaskCompletionSource<object>();
+
+                Task<object> retval = null;
 
                 // This is how microsoft handles awaiting the task that is passed into runAsync
                 // I have deconstructed it a little for the simple case.
@@ -33,29 +40,26 @@ namespace Mangosteen.Test
                     () => retval = expression())
                     .AsTask();
 
-                TaskAwaiter awaiter = task.GetAwaiter();
-
-                // This will block, awaiting the return from the above task
-                //
-                // Unfortunately, if the above task 'expression' contains an await, for some reason that I don't understand, this will 
-                // return.  How do I fix that?
-                awaiter.GetResult();
-
-                // If there hasn't been a task assertion, need to build a task completion source to return any results
-                // Task completion source proxy so we can return a task to the test
-
-                // In other words, this task completion source is a proxy that exists to hold return values.
-                var tcs = new TaskCompletionSource<object>();
-
-                // TCS seems to need to have a result set, 
-                if (awaiter.IsCompleted)
+                if (!task.IsCompleted)
                 {
-                    // This block will execute on the Assert.True(true) case
-                    // or any time there is no assertion.
-                    tcs.TrySetResult(retval);
-
-                    return tcs.Task;
+                    task.Wait();
                 }
+
+                Debug.WriteLine("Finished waiting on lambda running on UI thread because it either threw exception or returned");
+
+                // This is the case where the task completes immediately
+                // if retval is null, the task ran and completed instantly
+                // Not sure why in this case retval is null but it is.
+                if ((retval == null) || !retval.IsFaulted)
+                {
+                    tcs.TrySetResult(retval);
+                }
+                else
+                {
+                    tcs.TrySetException(retval.Exception);
+                }
+
+                return tcs.Task;
             }
             catch (Exception e)
             {
@@ -69,8 +73,42 @@ namespace Mangosteen.Test
 
                 return tcs.Task;
             }
+        }
+
+        public static Task<object> UpdateLayoutAsync(FrameworkElement element)
+        {
+            var tcs = new TaskCompletionSource<object>();
+
+            EventHandler<object> handler = null;
+            handler = delegate
+            {
+                Debug.WriteLine("Update layout event has occured.");
+                element.LayoutUpdated -= handler;
+                tcs.TrySetResult(null);
+            };
+
+            element.LayoutUpdated += handler;
+
+            element.UpdateLayout();
+
+            return tcs.Task;
+        }
+
+        public static async Task<object> SuperSimpleAsyncFunction()
+        {
+            Task.Delay(2000).Wait();    // <- This will block this thread as intended
 
             return null;
+        }
+
+        //
+        // Simplest async task I could come up with to test my tests...
+        //
+        public static async Task<int> SlowCalculate(int number1, int number2)
+        {
+            Task.Delay(2000).Wait();  // <- This will block this thread as intended
+
+            return number1 + number2;
         }
     }
 }
