@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="AsyncHelpers\AsyncHelpers.cs" />
     <Compile Include="AsyncHelpersTest.cs" />
+    <Compile Include="AsyncHelpers\AsyncOperation.cs" />
     <Compile Include="AsyncHelpers\AsyncOperationsQueue.cs" />
     <Compile Include="AsyncHelpers\AsyncSynchronizationContext.cs" />
     <Compile Include="SynchronizationContextTests.cs" />
