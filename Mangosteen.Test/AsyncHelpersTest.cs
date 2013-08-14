@@ -55,7 +55,7 @@ namespace Mangosteen.Test
         }
 
         [Fact]
-        public async Task TestAsserts_ContainsCalculateAwait_ShouldFail()
+        public async Task<object> TestAsserts_ContainsCalculateAwait_ShouldFail()
         {
             await AsyncHelpers.UIThread_Awaitable_Dispatch(async () =>
             {
@@ -64,10 +64,12 @@ namespace Mangosteen.Test
                 Assert.True(retval == 500);
                 return null;
             });
+
+            return null;
         }
 
         [Fact]
-        public async Task TestAsserts_Contains_UIUpdate_ShouldFail()
+        public async Task<object> TestAsserts_Contains_UIUpdate_ShouldFail()
         {
             // Lets call this Awaiting thread A.
             await AsyncHelpers.UIThread_Awaitable_Dispatch(async () =>
@@ -101,6 +103,8 @@ namespace Mangosteen.Test
 
             Debug.WriteLine("Back in the test body after waiting on the UI thread functionality.");
             Debug.WriteLine("About to exit the test");
+
+            return null;
         }
 
         [Fact]

@@ -124,6 +124,7 @@ namespace Mangosteen.Test
         //
         // Simplest async task I could come up with to test my tests...
         //
+        #pragma warning disable 1998 // Intentioanlly don't have await
         private async Task<int> Calculate(int number1, int number2)
         {
             Task.Delay(2000).Wait();

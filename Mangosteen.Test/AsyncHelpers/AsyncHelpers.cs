@@ -12,9 +12,10 @@ using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 
+
 namespace Mangosteen.Test
 {
-    public static class AsyncHelpers
+    public class AsyncHelpers
     {
         // This is a delegate that exists so I can pass in a lambda in the form of () => { do some stuff; }
         // Unfortunately, because it has to be Task<object> so that there is a return value, the 
@@ -23,7 +24,10 @@ namespace Mangosteen.Test
         // Haven't found a workaround for this yet.
         public delegate Task<object> ActionDelegate();
 
-        public static Task<object> UIThread_Awaitable_Dispatch(ActionDelegate expression)
+        //
+        // This does NOT work.
+        //
+        public static async Task<object> UIThread_Awaitable_Dispatch(ActionDelegate expression)
         {
             try
             {
@@ -42,7 +46,7 @@ namespace Mangosteen.Test
 
                 if (!task.IsCompleted)
                 {
-                    task.Wait();
+                    await task;
                 }
 
                 Debug.WriteLine("Finished waiting on lambda running on UI thread because it either threw exception or returned");
@@ -94,21 +98,52 @@ namespace Mangosteen.Test
             return tcs.Task;
         }
 
-        public static async Task<object> SuperSimpleAsyncFunction()
+        //
+        // Good delay for testing debugging of async calls because it will *block* this thread.
+        //
+        public static void RealDelay(int miliseconds)
         {
-            Task.Delay(2000).Wait();    // <- This will block this thread as intended
+            Task.Delay(miliseconds).Wait();
+        }
 
-            return null;
+        #pragma warning disable 1998  // Intentioanlly don't have await
+        public static async Task SuperSimpleAsyncFunction()
+        {
+            RealDelay(2000);
+            return;
         }
 
         //
         // Simplest async task I could come up with to test my tests...
         //
+        #pragma warning disable 1998    // Intentioanlly don't have await
         public static async Task<int> SlowCalculate(int number1, int number2)
         {
-            Task.Delay(2000).Wait();  // <- This will block this thread as intended
-
+            RealDelay(2000);
             return number1 + number2;
+        }
+
+        //
+        // This is tested and works
+        //
+        private SynchronizationContext _localcontext;
+        public async Task<SynchronizationContext> GrabUISynchronizationContext()
+        {
+            // This is how microsoft handles awaiting the task that is passed into runAsync
+            // I have deconstructed it a little for the simple case.
+            Task task = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => { 
+                    _localcontext = SynchronizationContext.Current;
+                }).AsTask();
+
+            TaskAwaiter awaiter = task.GetAwaiter();
+
+            if (!task.IsCompleted)
+            {
+                await task;
+            }
+
+            return _localcontext;
         }
     }
 }
