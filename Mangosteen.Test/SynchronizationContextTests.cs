@@ -13,8 +13,12 @@ using Xunit;
 
 namespace Mangosteen.Test
 {
+
+
     public class SynchronizationContextTests
     {
+
+
         [Fact]
         public void CannotGetSynchronizationContextInTest()
         {
@@ -34,5 +38,60 @@ namespace Mangosteen.Test
             Assert.True(uicontext != null);
             Assert.True(uicontext is System.Threading.SynchronizationContext);
         }
+
+        private string _shouldBeSet;
+        //
+        // This function has a long delay in it, before setting the variable.
+        // This is to insure our test doesn't pass accidentally by satisfying the race condition.
+        //
+        #pragma warning disable 1998
+        public async void AsyncVoidMethod()
+        {
+            AsyncHelpers.RealDelay(2000);
+            _shouldBeSet = "Yep it is set.";
+        }
+        #pragma warning restore 1998
+
+
+        [Fact]
+        #pragma warning disable 1998
+        public async Task TryToWait_ForAVoidAsync_UsingPost()
+        {
+            var currentContext = new AsyncSynchronizationContext();
+            SynchronizationContext.SetSynchronizationContext(currentContext);
+
+            try
+            {
+                currentContext.Post((t) => AsyncVoidMethod(),this);
+                currentContext.WaitForPendingOperationsToComplete();
+
+                Assert.True(_shouldBeSet == "Yep it is set.");
+            } finally
+            {
+                SynchronizationContext.SetSynchronizationContext(null);
+            }
+        }
+        #pragma warning restore 1998
+
+        [Fact]
+        #pragma warning disable 1998
+        public async Task TryToWait_ForAVoidAsync_StraightCall()
+        {
+            var currentContext = new AsyncSynchronizationContext();
+            SynchronizationContext.SetSynchronizationContext(currentContext);
+
+            try
+            {
+                AsyncVoidMethod();
+                currentContext.WaitForPendingOperationsToComplete();
+
+                Assert.True(_shouldBeSet == "Yep it is set.");
+            }
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(null);
+            }
+        }
+        #pragma warning restore 1998
     }
 }

@@ -14,6 +14,7 @@ using Xunit;
 
 namespace Mangosteen.Test
 {
+#if false
     public class AsyncHelpersTest
     {
         //
@@ -149,4 +150,5 @@ namespace Mangosteen.Test
             });
         }
     }
+#endif
 }

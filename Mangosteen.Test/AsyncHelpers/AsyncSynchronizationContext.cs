@@ -21,12 +21,19 @@ namespace Mangosteen.Test
             _operations.Enque(new AsyncOperation(d, state));
         }
 
+        public override void Send(SendOrPostCallback d, object state)
+        {
+            base.Send(d, state);
+        }
+
         public override void OperationCompleted()
         {
             if (Interlocked.Decrement(ref _operationCount) == 0)
             {
-                base.OperationCompleted();
+                _operations.MarkAsComplete();
             }
+
+            base.OperationCompleted();
         }
 
         public override void OperationStarted()

@@ -12,6 +12,7 @@ using Xunit;
 
 namespace Mangosteen.Test
 {
+#if false
     public class WheelPanelTest_UI_Experiments3
     {
         // This is a delegate that exists so I can pass in a lambda in the form of () => { do some stuff; }
@@ -159,4 +160,5 @@ namespace Mangosteen.Test
             });
         }
     }
+#endif
 }
