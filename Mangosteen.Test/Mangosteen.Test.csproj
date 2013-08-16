@@ -112,9 +112,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncHelpers\AsyncHelpers.cs" />
+    <Compile Include="AsyncHelpers\OldAsyncHelpers.cs" />
     <Compile Include="Experimental\AsyncHelpersTest_Experimental.cs" />
     <Compile Include="AsyncHelpers\AsyncOperation.cs" />
-    <Compile Include="AsyncHelpers\AsyncOperationsQueue.cs" />
+    <Compile Include="AsyncHelpers\AsyncOperationsPump.cs" />
     <Compile Include="AsyncHelpers\AsyncSynchronizationContext.cs" />
     <Compile Include="SynchronizationContextTests.cs" />
     <Compile Include="WedgeAngleTest.cs" />

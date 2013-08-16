@@ -13,12 +13,8 @@ using Xunit;
 
 namespace Mangosteen.Test
 {
-
-
     public class SynchronizationContextTests
     {
-
-
         [Fact]
         public void CannotGetSynchronizationContextInTest()
         {
@@ -63,13 +59,13 @@ namespace Mangosteen.Test
             try
             {
                 currentContext.Post((t) => AsyncVoidMethod(),this);
-                currentContext.WaitForPendingOperationsToComplete();
+                currentContext.PumpPendingOperations();
 
                 Assert.True(_shouldBeSet == "Yep it is set.");
             } finally
             {
                 SynchronizationContext.SetSynchronizationContext(null);
-            }
+            } 
         }
         #pragma warning restore 1998
 
@@ -83,15 +79,24 @@ namespace Mangosteen.Test
             try
             {
                 AsyncVoidMethod();
-                currentContext.WaitForPendingOperationsToComplete();
+                currentContext.PumpPendingOperations();
 
                 Assert.True(_shouldBeSet == "Yep it is set.");
             }
             finally
             {
                 SynchronizationContext.SetSynchronizationContext(null);
-            }
+            } 
         }
         #pragma warning restore 1998
+
+
+        [Fact]
+#pragma warning disable 1998
+        public async Task TryCatchException_()
+        {
+
+        }
+#pragma warning restore 1998
     }
 }

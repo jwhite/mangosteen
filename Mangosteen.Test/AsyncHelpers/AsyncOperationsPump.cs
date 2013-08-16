@@ -8,26 +8,25 @@ using System.Threading;
 
 namespace Mangosteen.Test
 {
-    internal class AsyncOperationsQueue<T>  where T : AsyncOperation
+    internal class AsyncOperationsPump<T>  where T : AsyncOperation
     {
         private bool _run = true;
         private readonly Queue<T>  _operations = new Queue<T>();
         private readonly AutoResetEvent _operationsAvailable = new AutoResetEvent(false);
 
-        public void Enque(T asyncOperation)
+        public void ScheduleOperation(T asyncOperation)
         {
             _operations.Enqueue(asyncOperation);
             _operationsAvailable.Set();
         }
 
-        // NOTE : not quite sure what this is doing.
-        public void MarkAsComplete()
+        public void SetPumpFinished()
         {
             _run = false;
             _operationsAvailable.Set();
         }
 
-        private void InvokePendingOperations()
+        private void PumpWaiting()
         {
             while ( _operations.Count > 0)
             {
@@ -36,15 +35,15 @@ namespace Mangosteen.Test
             }
         }
 
-        public void InvokeAll()
+        public void ContinuousPump()
         {
             while (_run)
             {
-                InvokePendingOperations();
+                PumpWaiting();
                 _operationsAvailable.WaitOne();
             }
 
-            InvokePendingOperations();
+            PumpWaiting();
         }
     }
 }

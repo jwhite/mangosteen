@@ -10,7 +10,7 @@ namespace Mangosteen.Test
     class AsyncSynchronizationContext : SynchronizationContext
     {
         private int _operationCount;
-        private readonly AsyncOperationsQueue<AsyncOperation> _operations = new AsyncOperationsQueue<AsyncOperation>();
+        private readonly AsyncOperationsPump<AsyncOperation> _operations = new AsyncOperationsPump<AsyncOperation>();
 
         // Asynchronous call the the delegate
         // 
@@ -18,7 +18,7 @@ namespace Mangosteen.Test
         // This should handle the problem with void Tasks?
         public override void Post(SendOrPostCallback d, object state)
         {
-            _operations.Enque(new AsyncOperation(d, state));
+            _operations.ScheduleOperation(new AsyncOperation(d, state));
         }
 
         public override void Send(SendOrPostCallback d, object state)
@@ -30,7 +30,7 @@ namespace Mangosteen.Test
         {
             if (Interlocked.Decrement(ref _operationCount) == 0)
             {
-                _operations.MarkAsComplete();
+                _operations.SetPumpFinished();
             }
 
             base.OperationCompleted();
@@ -42,9 +42,9 @@ namespace Mangosteen.Test
             base.OperationStarted();
         }
 
-        public void WaitForPendingOperationsToComplete()
+        public void PumpPendingOperations()
         {
-            _operations.InvokeAll();
+            _operations.ContinuousPump();
         }
     }
 }
