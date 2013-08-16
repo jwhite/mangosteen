@@ -18,8 +18,6 @@ namespace Mangosteen.Test
 {
     public class AsyncHelpers
     {
-
-
         //
         // Good delay for testing debugging of async calls because it will *block* this thread.
         //
@@ -70,31 +68,28 @@ namespace Mangosteen.Test
 
         public static async Task ThrowsExceptionAsync<TException>(Func<Task> func) where TException : Exception
         {
+            // Save of the current context in case it is not null
+            // But, in the case of tests it will probably always be null
+            var savedContext = SynchronizationContext.Current;
+
+            var currentContext = new AsyncSynchronizationContext();
+            SynchronizationContext.SetSynchronizationContext(currentContext);
+
             try
             {
-                await func().ConfigureAwait(false);
+                await func.Invoke();
+                currentContext.PumpPendingOperations();
             } 
             catch (TException)
             {
                 return;
             }
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(savedContext);
+            }
 
             Assert.True(false, "Delegate did not throw " + typeof(TException).Name);
-        }
-
-        // Version from haacked
-        public async static Task<T> ThrowsAsync<T>(Func<Task> testCode) where T : Exception
-        {
-            try
-            {
-                await testCode();
-                Assert.Throws<T>(() => { }); // Use xUnit's default behavior.
-            }
-            catch (T exception)
-            {
-                return exception;
-            }
-            return null;
         }
     }
 }
