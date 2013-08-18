@@ -36,7 +36,7 @@ namespace Mangosteen.Test
         #pragma warning disable 1998
         public async void AsyncVoidUIMethod()
         {
-            AsyncHelpers.RealDelay(2000);
+            AsyncHelpers.RealDelay(1000);
 
             Button b = new Button();
             _shouldBeSet = "Yep it is set.";
@@ -44,15 +44,26 @@ namespace Mangosteen.Test
 
         public async Task AsyncTaskUIMethod()
         {
-            AsyncHelpers.RealDelay(2000);
+            AsyncHelpers.RealDelay(1000);
 
             Button b = new Button();
             _shouldBeSet = "Yep it is set.";
         }
 
+        public async Task<object> AsyncTaskReturnsObjectUIMethod()
+        {
+            AsyncHelpers.RealDelay(1000);
+
+            Button b = new Button();
+            _shouldBeSet = "Yep it is set.";
+
+            return 5;
+        }
+
+
         public async void AsyncVoidUIThrowsException()
         {
-            AsyncHelpers.RealDelay(2000);
+            AsyncHelpers.RealDelay(1000);
 
             Button b = new Button();
             throw new Exception("We blew up!");
@@ -60,7 +71,7 @@ namespace Mangosteen.Test
 
         public async Task AsyncTaskUIThrowsException()
         {
-            AsyncHelpers.RealDelay(2000);
+            AsyncHelpers.RealDelay(1000);
 
             Button b = new Button();
             throw new Exception("We blew up!");
@@ -72,50 +83,43 @@ namespace Mangosteen.Test
         // Tests start here 
         //
         [Fact]
-        //#pragma warning disable 1998
-        public async Task TryToWait_ForVoidAsync_UsingPost()
+        public async Task TryToWait_UsingPost_ForVoidAsync()
         {
             var currentContext = UISynchronizationContext.Register();
 
-            try
-            {
-                currentContext.Post((t) => AsyncVoidUIMethod(), this);
-                currentContext.PumpPendingOperations();
+            currentContext.Post((t) => AsyncVoidUIMethod(), this);
+            currentContext.PumpPendingOperations();
 
-                Assert.True(_shouldBeSet == "Yep it is set.");
-            }
-            finally
-            {
-                SynchronizationContext.SetSynchronizationContext(null);
-            }
+            // If the above wasn't awaited, this won't be set yet
+            Assert.True(_shouldBeSet == "Yep it is set.");
         }
-        #pragma warning restore 1998
 
         [Fact]
-        #pragma warning disable 1998
-        ////
-        //// Proof that we can call a async void call in a unit test.
-        ////
-        //public async Task TryToWait_ForVoidAsync_StraightCall()
-        //{
-        //    AsyncHelpers ah = new AsyncHelpers();
-        //    //SynchronizationContext uicontext = await ah.GrabUISynchronizationContext();
+        public async Task TryToWait_UsingPost_ForTask()
+        {
+            var currentContext = UISynchronizationContext.Register();
 
-        //    var currentContext = new UIAsyncSynchronizationContext();
-        //    SynchronizationContext.SetSynchronizationContext(currentContext);
+            currentContext.Post((t) => AsyncTaskUIMethod(), this);
+            currentContext.PumpPendingOperations();
 
-        //    try
-        //    {
-        //        //currentContext.Post(() => AsyncVoidUIMethod(),this);
-        //        currentContext.PumpPendingOperations();
+            Assert.True(_shouldBeSet == "Yep it is set.");
+        }
 
-        //        Assert.True(_shouldBeSet == "Yep it is set.");
-        //    }
-        //    finally
-        //    {
-        //        SynchronizationContext.SetSynchronizationContext(null);
-        //    } 
-        //}
+        private Task<object> retval;
+
+        [Fact]
+        public async Task TryToWait_UsingPost_ForTaskReturns()
+        {
+            var currentContext = UISynchronizationContext.Register();
+            
+            currentContext.Post((t) => retval = AsyncTaskReturnsObjectUIMethod(), this);
+            currentContext.PumpPendingOperations();
+
+            Assert.True(_shouldBeSet == "Yep it is set.");
+            Assert.True((int)retval.Result == 5);
+        }
+
+
         #pragma warning restore 1998
 
 
@@ -134,43 +138,43 @@ namespace Mangosteen.Test
         // Awaited void function note the async on the lambda to allow for the await
         public async Task TryCatchException_VoidException2()
         {
-            await AsyncHelpers.ThrowsExceptionAsync<SynchronizationTestException>(async () =>
-            {
-                await AsyncTaskUIMethod();
-                // The async void here will be put inside of a Func<Task> object so it can be awaited on
-                AsyncVoidUIThrowsException();
-            });
+            //await AsyncHelpers.ThrowsExceptionAsync<SynchronizationTestException>(async () =>
+            //{
+            //    await AsyncTaskUIMethod();
+            //    // The async void here will be put inside of a Func<Task> object so it can be awaited on
+            //    AsyncVoidUIThrowsException();
+            //});
         }
 
         [Fact]
         public async Task TryCatchException_TaskException()
         {
-            await AsyncHelpers.ThrowsExceptionAsync<SynchronizationTestException>(async () =>
-            {
-                var currentContext = UISynchronizationContext.Register();
+           // await AsyncHelpers.ThrowsExceptionAsync<SynchronizationTestException>(async () =>
+           // {
+            //    var currentContext = UISynchronizationContext.Register();
    
                 
-                try
-                {
-                    currentContext.Post((t) =>
-                    {  
-                        AsyncTaskUIThrowsException();
+            //    try
+            //    {
+            //        currentContext.Post((t) =>
+            //        {  
+            //            AsyncTaskUIThrowsException();
                     
-                    }, this);
-                    currentContext.PumpPendingOperations();
+            //        }, this);
+            //        currentContext.PumpPendingOperations();
 
-                    Assert.True(_shouldBeSet == "Yep it is set.");
-                }
-                catch (Exception)
-                {
-                    //int i = 0;
-                }
-                finally
-                {
-                    SynchronizationContext.SetSynchronizationContext(null);
-                }
+            //        Assert.True(_shouldBeSet == "Yep it is set.");
+            //    }
+            //    catch (Exception)
+            //    {
+            //        //int i = 0;
+            //    }
+            //    finally
+            //    {
+            //        SynchronizationContext.SetSynchronizationContext(null);
+            //    }
 
-            });
+            //});
         }
     }
 }
