@@ -46,11 +46,18 @@ namespace Mangosteen.Test
         //
         // This is tested and works
         //
-        private SynchronizationContext _localcontext;
-        public async Task<SynchronizationContext> GrabUISynchronizationContext()
+
+        public static SynchronizationContext GrabUISynchronizationContext()
         {
-            // This is how microsoft handles awaiting the task that is passed into runAsync
-            // I have deconstructed it a little for the simple case.
+            var helper = new AsyncHelpers();
+            Task<SynchronizationContext> t = helper.GrabUISynchronizationContextAsync();
+            t.Wait();
+            return t.Result;
+        }
+
+        private SynchronizationContext _localcontext;
+        private async Task<SynchronizationContext> GrabUISynchronizationContextAsync()
+        {
             Task task = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () => { 
                     _localcontext = SynchronizationContext.Current;
@@ -66,6 +73,37 @@ namespace Mangosteen.Test
             return _localcontext;
         }
 
+
+        public static CoreDispatcher GrabUIDispatcher()
+        {
+            var helper = new AsyncHelpers();
+            Task<CoreDispatcher> t = helper.GrabUIDispatcherAsync();
+            t.Wait();
+            return t.Result;
+        }
+        //
+        // This is tested and works
+        //
+        private CoreDispatcher _localDispatcher;
+        private async Task<CoreDispatcher> GrabUIDispatcherAsync()
+        {
+            // This is how microsoft handles awaiting the task that is passed into runAsync
+            // I have deconstructed it a little for the simple case.
+            Task task = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () => {
+                    _localDispatcher = Windows.UI.Core.CoreWindow.GetForCurrentThread().Dispatcher; 
+                }).AsTask();
+
+            TaskAwaiter awaiter = task.GetAwaiter();
+
+            if (!task.IsCompleted)
+            {
+                await task;
+            }
+
+            return _localDispatcher;
+        }
+
         public static async Task ThrowsExceptionAsync<TException>(Func<Task> func) where TException : Exception
         {
             // Save of the current context in case it is not null
@@ -77,7 +115,9 @@ namespace Mangosteen.Test
 
             try
             {
+                // This may not catch void exception!  TODO : Fix this
                 await func.Invoke();
+                
                 currentContext.PumpPendingOperations();
             } 
             catch (TException)
@@ -91,5 +131,9 @@ namespace Mangosteen.Test
 
             Assert.True(false, "Delegate did not throw " + typeof(TException).Name);
         }
+
+        public delegate Task<object> ActionDelegate();
+
+        
     }
 }

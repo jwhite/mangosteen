@@ -15,6 +15,13 @@ namespace Mangosteen.Test
 {
     public class SynchronizationContextTests
     {
+        public class SynchronizationTestException : System.Exception
+        {
+            public SynchronizationTestException() { }
+
+            public SynchronizationTestException(string message)
+                : base(message) { }
+        }
 
         #region Sample async functions to test with ...............................................................
         private string _shouldBeSet;
@@ -41,13 +48,13 @@ namespace Mangosteen.Test
         public async void AsyncThrowsExceptionVoid()
         {
             AsyncHelpers.RealDelay(2000);
-            throw new Exception("We blew up!");
+            throw new SynchronizationTestException("We blew up!");
         }
 
         public async Task AsyncThrowsExceptionAwaitable()
         {
             AsyncHelpers.RealDelay(2000);
-            throw new Exception("We blew up!");
+            throw new SynchronizationTestException("We blew up!");
         }
         #pragma warning restore 1998
         #endregion
@@ -55,26 +62,6 @@ namespace Mangosteen.Test
         //
         // Tests start here 
         //
-
-        [Fact]
-        public void CannotGetSynchronizationContextInTest()
-        {
-            SynchronizationContext localContext;
-            localContext = SynchronizationContext.Current;
-
-            Assert.True(localContext == null);
-        }
-
-        [Fact]
-        public async Task TryToGrabSynchronizationContextFromUI()
-        {
-            AsyncHelpers ah = new AsyncHelpers();
-
-            SynchronizationContext uicontext = await ah.GrabUISynchronizationContext();
-
-            Assert.True(uicontext != null);
-            Assert.True(uicontext is System.Threading.SynchronizationContext);
-        }
 
         [Fact]
         #pragma warning disable 1998
@@ -126,12 +113,9 @@ namespace Mangosteen.Test
         // Void function that is passed into a task lambda
         public async Task TryCatchException_VoidException()
         {
-            await AsyncHelpers.ThrowsExceptionAsync<Exception>(() =>
+            await AsyncHelpers.ThrowsExceptionAsync<SynchronizationTestException>(async () =>
             {
-                // The async void here will be put inside of a Func<Task> object so it can be awaited on
                 AsyncThrowsExceptionVoid();
-
-                return null;
             });
         }
 
@@ -139,7 +123,7 @@ namespace Mangosteen.Test
         // Awaited void function note the async on the lambda to allow for the await
         public async Task TryCatchException_VoidException2()
         {
-            await AsyncHelpers.ThrowsExceptionAsync<Exception>(async () =>
+            await AsyncHelpers.ThrowsExceptionAsync<SynchronizationTestException>(async () =>
             {
                 await AsyncTaskMethod();
                 // The async void here will be put inside of a Func<Task> object so it can be awaited on
@@ -150,7 +134,7 @@ namespace Mangosteen.Test
         [Fact]
         public async Task TryCatchException_TaskException()
         {
-            await AsyncHelpers.ThrowsExceptionAsync<Exception>(async () =>
+            await AsyncHelpers.ThrowsExceptionAsync<SynchronizationTestException>(async () =>
             {
                 // The async void here will be put inside of a Func<Task> object so it can be awaited on
                 await AsyncThrowsExceptionAwaitable();

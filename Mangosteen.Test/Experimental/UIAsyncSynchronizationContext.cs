@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 namespace Mangosteen.Test
 {
-    class AsyncSynchronizationContext : SynchronizationContext
+    class UIAsyncSynchronizationContext : SynchronizationContext
     {
         private int _operationCount;
-        private readonly AsyncOperationsPump<AsyncOperation> _operations = new AsyncOperationsPump<AsyncOperation>();
+        private readonly AsyncOperationsPump<UIAsyncOperation> _operations = new AsyncOperationsPump<UIAsyncOperation>();
 
         // Asynchronous call the the delegate
         // 
@@ -18,19 +20,29 @@ namespace Mangosteen.Test
         // This should handle the problem with void Tasks?
         public override void Post(SendOrPostCallback d, object state)
         {
-             _operations.ScheduleOperation(new AsyncOperation(d, state));
+            try
+            {
+                _operations.ScheduleOperation(new UIAsyncOperation(d, state));
+            } catch(Exception e)
+            {
+                int i = 0;
+            }
         }
 
         public override void Send(SendOrPostCallback d, object state)
         {
-
-            base.Send(d, state);
+            try
+            {
+                base.Send(d, state);
+            }
+            catch (Exception e)
+            {
+                int i = 0;
+            }
         }
 
         public override void OperationCompleted()
         {
-            if (_operationCount == 0) throw new Exception("Thread completed but was never started!");
-
             if (Interlocked.Decrement(ref _operationCount) == 0)
             {
                 _operations.SetPumpFinished();
