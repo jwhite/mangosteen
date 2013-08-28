@@ -13,12 +13,12 @@ using Xunit;
 
 namespace Mangosteen.Test
 {
-    public class AsyncHelpersTest_GetUIThread
+    public class GetUIThreadTests
     {
         [Fact]
         public void TryToGrabSynchronizationContextFromUI()
         {
-            SynchronizationContext uicontext = AsyncHelpers.GrabUISynchronizationContext();
+            SynchronizationContext uicontext = GetUIThread.GrabUISynchronizationContext();
 
             Assert.True(uicontext != null);
             Assert.True(uicontext is System.Threading.SynchronizationContext);
@@ -27,7 +27,7 @@ namespace Mangosteen.Test
         [Fact]
         public void TryToGrabCoreDispatcherFromUI()
         {
-            CoreDispatcher cd = AsyncHelpers.GrabUIDispatcher();
+            CoreDispatcher cd = GetUIThread.GrabUIDispatcher();
 
             Assert.True(cd != null);
             Assert.True(cd is Windows.UI.Core.CoreDispatcher);

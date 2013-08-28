@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Mangosteen.Test
 {
-    public class AsyncHelpers
+    public class ExecuteUIThread
     {
         //
         // Good delay for testing debugging of async calls because it will *block* this thread.
@@ -44,95 +44,30 @@ namespace Mangosteen.Test
             return number1 + number2;
         }
 
-        public static SynchronizationContext GrabUISynchronizationContext()
+        // This function accepts a lambda that has no parameters and returns void
+        public static void ExecuteOnUIThread(Action expression)
         {
-            var helper = new AsyncHelpers();
-            Task<SynchronizationContext> t = helper.GrabUISynchronizationContextAsync();
-            t.Wait();
-            return t.Result;
+          
         }
 
-        private SynchronizationContext _localcontext;
-        private async Task<SynchronizationContext> GrabUISynchronizationContextAsync()
+        // This function accepts a lambda that takes one parameter and returns void
+        public static void ExecuteOnUIThread(Action<object> expression)
         {
-            Task task = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => { 
-                    _localcontext = SynchronizationContext.Current;
-                }).AsTask();
 
-            TaskAwaiter awaiter = task.GetAwaiter();
-
-            if (!task.IsCompleted)
-            {
-                await task;
-            }
-
-            return _localcontext;
         }
 
-
-        public static CoreDispatcher GrabUIDispatcher()
+        // This function accepts a lambda that takes one parameter and returns void
+        public static void ExecuteOnUIThread(Action<object,object> expression)
         {
-            var helper = new AsyncHelpers();
-            Task<CoreDispatcher> t = helper.GrabUIDispatcherAsync();
-            t.Wait();
-            return t.Result;
+
         }
 
-        private CoreDispatcher _localDispatcher;
-        private async Task<CoreDispatcher> GrabUIDispatcherAsync()
+        // This function accepts a lambda that has one of more parameters
+        public static object ExecuteOnUIThread<T>(Func<T,object> expression)
         {
-            // This is how microsoft handles awaiting the task that is passed into runAsync
-            // I have deconstructed it a little for the simple case.
-            Task task = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () => {
-                    _localDispatcher = Windows.UI.Core.CoreWindow.GetForCurrentThread().Dispatcher; 
-                }).AsTask();
-
-            TaskAwaiter awaiter = task.GetAwaiter();
-
-            if (!task.IsCompleted)
-            {
-                await task;
-            }
-
-            return _localDispatcher;
+            return null;
         }
 
-        //public delegate Task<object> ActionDelegate();
-
-        //public static async Task ThrowsExceptionAsync<TException>(Task func) where TException : Exception
-        //{
-        //    // Save of the current context in case it is not null
-        //    // But, in the case of tests it will probably always be null
-        //    var currentContext = (AsyncSynchronizationContext)AsyncSynchronizationContext.Register();
-
-        //    try
-        //    {
-        //        //Task task = func;
-        //        //currentContext.Post((t) =>
-        //        //{
-        //        //    task.Start();
-
-        //        //    task.ContinueWith((task) => { });
-        //        //    }, null);
-
-                
-        //        //currentContext.PumpPendingOperations();
-           
-
-        //    } 
-        //    catch (TException)
-        //    {
-        //        return;
-        //    }
-        //    finally
-        //    {
-        //        //SynchronizationContext.SetSynchronizationContext(savedContext);
-        //    }
-
-        //    Assert.True(false, "Delegate did not throw " + typeof(TException).Name);
-        //}
 
 
         /// <summary>
@@ -180,6 +115,5 @@ namespace Mangosteen.Test
 
             return returnobject;
         }
-
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -37,7 +38,7 @@ namespace Mangosteen.Test
         #pragma warning disable 1998
         public async void AsyncVoidUIMethod()
         {
-            AsyncHelpers.RealDelay(1000);
+            ExecuteUIThread.RealDelay(1000);
 
             Button b = new Button();
             _shouldBeSet = "Yep it is set.";
@@ -45,7 +46,7 @@ namespace Mangosteen.Test
 
         public async Task AsyncTaskUIMethod()
         {
-            AsyncHelpers.RealDelay(1000);
+            ExecuteUIThread.RealDelay(1000);
 
             Button b = new Button();
             _shouldBeSet = "Yep it is set.";
@@ -53,7 +54,7 @@ namespace Mangosteen.Test
 
         public async Task<object> AsyncTaskReturnsObjectUIMethod()
         {
-            AsyncHelpers.RealDelay(1000);
+            ExecuteUIThread.RealDelay(1000);
 
             Button b = new Button();
             _shouldBeSet = "Yep it is set.";
@@ -63,7 +64,7 @@ namespace Mangosteen.Test
 
         public async void AsyncVoidUIThrowsException()
         {
-            AsyncHelpers.RealDelay(1000);
+            ExecuteUIThread.RealDelay(1000);
 
             Button b = new Button();
             throw new Exception("We blew up!");
@@ -71,7 +72,7 @@ namespace Mangosteen.Test
 
         public async Task AsyncTaskUIThrowsException()
         {
-            AsyncHelpers.RealDelay(1000);
+            ExecuteUIThread.RealDelay(1000);
 
             Button b = new Button();
             throw new Exception("We blew up!");
@@ -79,25 +80,75 @@ namespace Mangosteen.Test
         #pragma warning restore 1998
         #endregion
 
+        public void SetThis()
+        {
+            ExecuteUIThread.RealDelay(1000);
+
+            Button b = new Button();
+            _shouldBeSet = "Yep it is set.";
+        }
+
         //
         // Tests start here 
         //
+
+        
+        [Fact]
+        public void TryToCall_NonUI_TakesNoneReturnsVoid()
+        {
+            ExecuteUIThread.ExecuteOnUIThread(() => { 
+                
+                _shouldBeSet = "How now brown cow"; 
+            });
+
+            Assert.True(_shouldBeSet == "How now brown cow");
+        }
+
+        [Fact]
+        public void TryToCall_NonUI_TakesOneReturnsVoid()
+        {
+            ExecuteUIThread.ExecuteOnUIThread((i) =>
+            {
+                _shouldBeSet = "How now brown cow";
+            });
+
+            Assert.True(_shouldBeSet == "How now brown cow");
+        }
+
+        [Fact]
+        public void TryToCall_NonUI_TakesTwoReturnsVoid()
+        {
+            ExecuteUIThread.ExecuteOnUIThread((i,j) =>
+            {
+                _shouldBeSet = "How now brown cow";
+            });
+
+            Assert.True(_shouldBeSet == "How now brown cow");
+        }
+
         [Fact]
         public async Task TryToWait_ForVoidAsync()
         {
-            Func<object> expression = delegate() { return  5; }; 
+           // Func<object> f = new System.Func<object>(() => { return 5; });
 
-           //var returnvalue = AsyncHelpers.ExecuteOnUIThread();
+           // Expression<object> e = f;
+
+           // MethodCallExpression outermostExpression = f.Body as MethodCallExpression;
+
+           //var returnvalue = AsyncHelpers.ExecuteOnUIThread(outermostExpression.Method,
+           //    outermostExpression.Object,
+           //    outermostExpression.Arguments.);
+
 
         }
 
         [Fact]
         public async Task TryToWait_ForTask()
         {
-            var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
+            //var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
 
-            currentContext.Post((t) => AsyncTaskUIMethod(), this);
-            currentContext.PumpPendingOperations();
+            //currentContext.Post((t) => AsyncTaskUIMethod(), this);
+            //currentContext.PumpPendingOperations();
 
             Assert.True(_shouldBeSet == "Yep it is set.");
         }
@@ -107,17 +158,16 @@ namespace Mangosteen.Test
         [Fact]
         public async Task TryToWait_ForTaskReturns()
         {
-            var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
+            //var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
             
-            currentContext.Post((t) => retval = AsyncTaskReturnsObjectUIMethod(), this);
-            currentContext.PumpPendingOperations();
+            //currentContext.Post((t) => retval = AsyncTaskReturnsObjectUIMethod(), this);
+            //currentContext.PumpPendingOperations();
 
             Assert.True(_shouldBeSet == "Yep it is set.");
             Assert.True((int)retval.Result == 5);
         }
 
 
-        #pragma warning restore 1998
 
 
         [Fact]
