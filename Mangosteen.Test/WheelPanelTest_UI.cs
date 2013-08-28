@@ -11,7 +11,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 using Xunit;
-using Xunit.Extensions;
+
 
 namespace Mangosteen.Test
 {

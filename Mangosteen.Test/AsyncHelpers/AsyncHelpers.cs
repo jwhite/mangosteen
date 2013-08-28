@@ -104,21 +104,26 @@ namespace Mangosteen.Test
             return _localDispatcher;
         }
 
-        public static async Task ThrowsExceptionAsync<TException>(Func<Task> func) where TException : Exception
+        public static async Task ThrowsExceptionAsync<TException>(Task func) where TException : Exception
         {
             // Save of the current context in case it is not null
             // But, in the case of tests it will probably always be null
-            var savedContext = SynchronizationContext.Current;
-
-            var currentContext = new AsyncSynchronizationContext();
-            SynchronizationContext.SetSynchronizationContext(currentContext);
+            var currentContext = (AsyncSynchronizationContext)AsyncSynchronizationContext.Register();
 
             try
             {
-                // This may not catch void exception!  TODO : Fix this
-                await func.Invoke();
+                //Task task = func;
+                //currentContext.Post((t) =>
+                //{
+                //    task.Start();
+
+                //    task.ContinueWith((task) => { });
+                //    }, null);
+
                 
-                currentContext.PumpPendingOperations();
+                //currentContext.PumpPendingOperations();
+           
+
             } 
             catch (TException)
             {
@@ -126,7 +131,7 @@ namespace Mangosteen.Test
             }
             finally
             {
-                SynchronizationContext.SetSynchronizationContext(savedContext);
+                //SynchronizationContext.SetSynchronizationContext(savedContext);
             }
 
             Assert.True(false, "Delegate did not throw " + typeof(TException).Name);

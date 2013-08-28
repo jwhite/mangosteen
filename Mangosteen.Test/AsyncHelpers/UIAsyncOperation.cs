@@ -15,13 +15,11 @@ namespace Mangosteen.Test
     internal class UIAsyncOperation : AsyncOperation
     {
         public UIAsyncOperation() {} 
-        //private readonly SendOrPostCallback _action;
-        //private readonly object _state;
 
-        public UIAsyncOperation(SendOrPostCallback action, object state) : base(action, state) { }
+        public UIAsyncOperation(Task action, object state) : base(action, state) { }
         private readonly AutoResetEvent _synchronizingEvent = new AutoResetEvent(false);
 
-        public override void Invoke()
+        public override void ExecuteAction()
         {
             UISynchronizationContext.Current.OperationStarted();
 
@@ -29,43 +27,30 @@ namespace Mangosteen.Test
 
             TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
 
-           
-
             try
             {
                 task = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                async () =>
-                {
+                async () => {
                     try
                     {
-                        _action(_state);
+                        await _action;
                         tcs.SetResult(new Object());
                     }
                     catch (Exception e)
                     {
                         tcs.SetException(e);
                     }
-                }
-
-
-                ).AsTask();
+                }).AsTask();
 
                 SpinWait.SpinUntil(() => task.IsCompleted);
-                
-                //_synchronizingEvent.WaitOne();
             } catch (Exception)
             {
-                //int i = 0;
+                int i = 0;
             }
             finally
             {
                 UISynchronizationContext.Current.OperationCompleted();
             }
-
-
-
-           
-
         }
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)

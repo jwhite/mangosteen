@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Extensions;
 using Windows.Foundation;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;

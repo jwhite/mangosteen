@@ -22,9 +22,9 @@ namespace Mangosteen.Test
             WinRTUIContext = ui;
         }
 
-        public static UISynchronizationContext Register()
+        public static SynchronizationContext Register()
         {
-            UISynchronizationContext uiSynchronizationContext = null;
+            SynchronizationContext uiSynchronizationContext = null;
 
             if (Current == null)
             {
@@ -70,7 +70,9 @@ namespace Mangosteen.Test
         // This should handle the problem with void Tasks?
         public override void Post(SendOrPostCallback d, object state)
         {
-            _operations.ScheduleOperation(new UIAsyncOperation(d, state));
+            Action<object> a = new Action<object>(d);
+            Task t = new Task(a, state);
+            _operations.ScheduleOperation(new UIAsyncOperation(t, state));
         }
 
         public override void Send(SendOrPostCallback d, object state)

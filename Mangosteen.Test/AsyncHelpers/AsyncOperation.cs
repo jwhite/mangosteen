@@ -11,20 +11,30 @@ namespace Mangosteen.Test
     // then call invoke when it is appropriate.
     internal class AsyncOperation
     {
-        protected readonly SendOrPostCallback _action;
+        protected readonly Task _action;
         protected readonly object _state;
 
         public AsyncOperation() {}
 
-        public AsyncOperation(SendOrPostCallback action, object state)
+        public AsyncOperation(Task action, object state)
         {
             _action = action;
             _state = state;
         }
 
-        public virtual void Invoke()
+        public virtual void ExecuteAction()
         {
-            _action(_state);
+            try
+            {
+                var awaiter = _action.GetAwaiter();
+                _action.Start();
+
+                SpinWait.SpinUntil(() => _action.IsCompleted);
+
+            } catch (Exception e)
+            {
+                int i = 0;
+            }
         }
     }
 }

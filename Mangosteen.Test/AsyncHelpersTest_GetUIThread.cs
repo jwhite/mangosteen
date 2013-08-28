@@ -16,15 +16,6 @@ namespace Mangosteen.Test
     public class AsyncHelpersTest_GetUIThread
     {
         [Fact]
-        public void CannotGetSynchronizationContextInTest()
-        {
-            SynchronizationContext localContext;
-            localContext = SynchronizationContext.Current;
-
-            Assert.True(localContext == null);
-        }
-
-        [Fact]
         public void TryToGrabSynchronizationContextFromUI()
         {
             SynchronizationContext uicontext = AsyncHelpers.GrabUISynchronizationContext();

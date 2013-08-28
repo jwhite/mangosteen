@@ -31,7 +31,7 @@ namespace Mangosteen.Test
             while ( _operations.Count > 0)
             {
                 T operation = _operations.Dequeue();
-                operation.Invoke();
+                operation.ExecuteAction();
             }
         }
 

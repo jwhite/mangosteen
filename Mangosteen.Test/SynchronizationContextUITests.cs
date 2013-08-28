@@ -85,7 +85,7 @@ namespace Mangosteen.Test
         [Fact]
         public async Task TryToWait_UsingPost_ForVoidAsync()
         {
-            var currentContext = UISynchronizationContext.Register();
+            var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
 
             currentContext.Post((t) => AsyncVoidUIMethod(), this);
             currentContext.PumpPendingOperations();
@@ -97,7 +97,7 @@ namespace Mangosteen.Test
         [Fact]
         public async Task TryToWait_UsingPost_ForTask()
         {
-            var currentContext = UISynchronizationContext.Register();
+            var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
 
             currentContext.Post((t) => AsyncTaskUIMethod(), this);
             currentContext.PumpPendingOperations();
@@ -110,7 +110,7 @@ namespace Mangosteen.Test
         [Fact]
         public async Task TryToWait_UsingPost_ForTaskReturns()
         {
-            var currentContext = UISynchronizationContext.Register();
+            var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
             
             currentContext.Post((t) => retval = AsyncTaskReturnsObjectUIMethod(), this);
             currentContext.PumpPendingOperations();
@@ -149,32 +149,16 @@ namespace Mangosteen.Test
         [Fact]
         public async Task TryCatchException_TaskException()
         {
-           // await AsyncHelpers.ThrowsExceptionAsync<SynchronizationTestException>(async () =>
-           // {
-            //    var currentContext = UISynchronizationContext.Register();
-   
-                
-            //    try
-            //    {
-            //        currentContext.Post((t) =>
-            //        {  
-            //            AsyncTaskUIThrowsException();
-                    
-            //        }, this);
-            //        currentContext.PumpPendingOperations();
-
-            //        Assert.True(_shouldBeSet == "Yep it is set.");
-            //    }
-            //    catch (Exception)
-            //    {
-            //        //int i = 0;
-            //    }
-            //    finally
-            //    {
-            //        SynchronizationContext.SetSynchronizationContext(null);
-            //    }
-
-            //});
+            var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
+           
+            try
+            {
+                currentContext.Post((t) => AsyncTaskUIThrowsException(), this);
+                currentContext.PumpPendingOperations();
+            } catch (Exception e)
+            {
+                int i = 0;
+            }
         }
     }
 }
