@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -43,10 +44,6 @@ namespace Mangosteen.Test
             return number1 + number2;
         }
 
-        //
-        // This is tested and works
-        //
-
         public static SynchronizationContext GrabUISynchronizationContext()
         {
             var helper = new AsyncHelpers();
@@ -81,9 +78,7 @@ namespace Mangosteen.Test
             t.Wait();
             return t.Result;
         }
-        //
-        // This is tested and works
-        //
+
         private CoreDispatcher _localDispatcher;
         private async Task<CoreDispatcher> GrabUIDispatcherAsync()
         {
@@ -104,41 +99,87 @@ namespace Mangosteen.Test
             return _localDispatcher;
         }
 
-        public static async Task ThrowsExceptionAsync<TException>(Task func) where TException : Exception
-        {
-            // Save of the current context in case it is not null
-            // But, in the case of tests it will probably always be null
-            var currentContext = (AsyncSynchronizationContext)AsyncSynchronizationContext.Register();
+        //public delegate Task<object> ActionDelegate();
 
-            try
-            {
-                //Task task = func;
-                //currentContext.Post((t) =>
-                //{
-                //    task.Start();
+        //public static async Task ThrowsExceptionAsync<TException>(Task func) where TException : Exception
+        //{
+        //    // Save of the current context in case it is not null
+        //    // But, in the case of tests it will probably always be null
+        //    var currentContext = (AsyncSynchronizationContext)AsyncSynchronizationContext.Register();
 
-                //    task.ContinueWith((task) => { });
-                //    }, null);
+        //    try
+        //    {
+        //        //Task task = func;
+        //        //currentContext.Post((t) =>
+        //        //{
+        //        //    task.Start();
+
+        //        //    task.ContinueWith((task) => { });
+        //        //    }, null);
 
                 
-                //currentContext.PumpPendingOperations();
+        //        //currentContext.PumpPendingOperations();
            
 
-            } 
-            catch (TException)
+        //    } 
+        //    catch (TException)
+        //    {
+        //        return;
+        //    }
+        //    finally
+        //    {
+        //        //SynchronizationContext.SetSynchronizationContext(savedContext);
+        //    }
+
+        //    Assert.True(false, "Delegate did not throw " + typeof(TException).Name);
+        //}
+
+
+        /// <summary>
+        /// Executes a method on the UI thread using Invoke and waits for its completeion 
+        /// before returning.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="instance"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static object ExecuteOnUIThread(MethodInfo method, object instance, object [] args)
+        {
+            Exception exceptionoccured = null;
+            object returnobject = null;
+
+            // See if we can find the mainwindow
+            if (CoreApplication.MainView == null || 
+                CoreApplication.MainView.CoreWindow == null || 
+                CoreApplication.MainView.CoreWindow.Dispatcher == null)
             {
-                return;
-            }
-            finally
-            {
-                //SynchronizationContext.SetSynchronizationContext(savedContext);
+                throw new Exception("We don't have a valid UI dispatcher!");
             }
 
-            Assert.True(false, "Delegate did not throw " + typeof(TException).Name);
+            CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+
+            dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                try
+                {
+                    returnobject = method.Invoke(instance, args);
+                }
+                catch (Exception e)
+                {
+                    
+                    exceptionoccured = e;
+                }
+            }).AsTask().Wait();
+
+            if (exceptionoccured != null)
+            {
+                // Rethrow the exception
+                // TODO : Will this overwrite the stack trace?  Or do I need to pack more?
+                throw new Exception("UI thread exception", exceptionoccured);
+            }
+
+            return returnobject;
         }
 
-        public delegate Task<object> ActionDelegate();
-
-        
     }
 }

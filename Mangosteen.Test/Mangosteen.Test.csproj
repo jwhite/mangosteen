@@ -115,10 +115,11 @@
   <ItemGroup>
     <Compile Include="AsyncHelpers\AsyncHelpers.cs" />
     <None Include="Experimental\UIAsyncSynchronizationContext.cs" />
+    <Compile Include="AsyncHelpers\SymbolExtensions.cs" />
     <Compile Include="AsyncHelpers\UIAsyncOperation.cs" />
-    <Compile Include="AsyncHelpers\OldAsyncHelpers.cs" />
     <Compile Include="AsyncHelpers\UISynchronizationContext.cs" />
     <Compile Include="AsyncHelpersTest_GetUIThread.cs" />
+    <Compile Include="SymbolExtensionsTests.cs" />
     <Compile Include="SynchronizationContextUITests.cs" />
     <Compile Include="Experimental\AsyncHelpersTest_Experimental.cs" />
     <Compile Include="AsyncHelpers\AsyncOperation.cs" />

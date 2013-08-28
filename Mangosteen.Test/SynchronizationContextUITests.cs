@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -60,7 +61,6 @@ namespace Mangosteen.Test
             return 5;
         }
 
-
         public async void AsyncVoidUIThrowsException()
         {
             AsyncHelpers.RealDelay(1000);
@@ -83,19 +83,16 @@ namespace Mangosteen.Test
         // Tests start here 
         //
         [Fact]
-        public async Task TryToWait_UsingPost_ForVoidAsync()
+        public async Task TryToWait_ForVoidAsync()
         {
-            var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
+            Func<object> expression = delegate() { return  5; }; 
 
-            currentContext.Post((t) => AsyncVoidUIMethod(), this);
-            currentContext.PumpPendingOperations();
+           //var returnvalue = AsyncHelpers.ExecuteOnUIThread();
 
-            // If the above wasn't awaited, this won't be set yet
-            Assert.True(_shouldBeSet == "Yep it is set.");
         }
 
         [Fact]
-        public async Task TryToWait_UsingPost_ForTask()
+        public async Task TryToWait_ForTask()
         {
             var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
 
@@ -108,7 +105,7 @@ namespace Mangosteen.Test
         private Task<object> retval;
 
         [Fact]
-        public async Task TryToWait_UsingPost_ForTaskReturns()
+        public async Task TryToWait_ForTaskReturns()
         {
             var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
             
@@ -123,18 +120,20 @@ namespace Mangosteen.Test
         #pragma warning restore 1998
 
 
-        //[Fact]
-        //// Void function that is passed into a task lambda
-        //public async Task TryCatchException_VoidException()
-        //{
-        //    await AsyncHelpers.ThrowsExceptionAsync<SynchronizationTestException>(async () =>
-        //    {
-        //        // The async void here will be put inside of a Func<Task> object so it can be awaited on
-        //        AsyncVoidUIThrowsException();
-        //    });
-        //}
+        [Fact]
+        // Void function that is passed into a task lambda
+        public async Task TryCatchException_VoidException()
+        {
+            //await AsyncHelpers.ThrowsExceptionAsync<SynchronizationTestException>(async () =>
+            //{
+            //    // The async void here will be put inside of a Func<Task> object so it can be awaited on
+            //    AsyncVoidUIThrowsException();
+            //});
 
-        //[Fact]
+            Assert.True(false);
+        }
+
+        [Fact]
         // Awaited void function note the async on the lambda to allow for the await
         public async Task TryCatchException_VoidException2()
         {
@@ -144,21 +143,24 @@ namespace Mangosteen.Test
             //    // The async void here will be put inside of a Func<Task> object so it can be awaited on
             //    AsyncVoidUIThrowsException();
             //});
+            Assert.True(false);
         }
 
         [Fact]
         public async Task TryCatchException_TaskException()
         {
-            var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
+            //var currentContext = (UISynchronizationContext)UISynchronizationContext.Register();
            
-            try
-            {
-                currentContext.Post((t) => AsyncTaskUIThrowsException(), this);
-                currentContext.PumpPendingOperations();
-            } catch (Exception e)
-            {
-                int i = 0;
-            }
+            //try
+            //{
+            //    currentContext.Post((t) => AsyncTaskUIThrowsException(), this);
+            //    currentContext.PumpPendingOperations();
+            //} catch (Exception e)
+            //{
+            //    int i = 0;
+            //}
+
+            Assert.True(false);
         }
     }
 }
