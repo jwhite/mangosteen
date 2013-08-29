@@ -114,7 +114,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncHelpers\ExecuteUIThread.cs" />
-    <None Include="Experimental\UIAsyncSynchronizationContext.cs" />
     <Compile Include="AsyncHelpers\GetUIThread.cs" />
     <Compile Include="AsyncHelpers\SymbolExtensions.cs" />
     <Compile Include="ExecuteUITests_UIFunctions.cs" />
@@ -122,15 +121,12 @@
     <Compile Include="ExecuteUITests_CatchExceptions.cs" />
     <Compile Include="SymbolExtensionsTests.cs" />
     <Compile Include="ExecuteUITests_NoUI.cs" />
-    <Compile Include="Experimental\AsyncHelpersTest_Experimental.cs" />
-    <Compile Include="Experimental\SynchronizationContextTests.cs" />
     <Compile Include="WedgeAngleTest.cs" />
     <Compile Include="WedgeDefinitionTest.cs" />
     <Compile Include="WheelPanelTest_ArrangeAndMeasure.cs" />
     <Compile Include="WheelPanelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WheelPanelTest_UI.cs" />
-    <Compile Include="Experimental\WheelPanelTest_UI_Experiments3.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
