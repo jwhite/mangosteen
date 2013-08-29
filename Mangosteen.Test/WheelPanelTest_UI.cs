@@ -15,20 +15,21 @@ using Xunit;
 
 namespace Mangosteen.Test
 {
-#if false
     public class WheelPanelTest_UI
     {
-        private static async Task<object> AwaitableUpdate(FrameworkElement element)
+        private static async void AwaitableUpdate(FrameworkElement element)
         {
-            Task<object> foo = EventAsync.FromEvent<object>(
-                eh => element.LayoutUpdated += eh,
-                eh => element.LayoutUpdated -= eh,
-                () => element.UpdateLayout()
-                );
+            //Task<object> foo = EventAsync.FromEvent<object>(
+            //    eh => element.LayoutUpdated += eh,
+            //    eh => element.LayoutUpdated -= eh,
+            //    () => element.UpdateLayout()
+            //    );
 
-            await foo;
+            //await foo;
 
-            return foo;
+            //return foo;
+
+            Assert.True(false);
         }
 
         private static WheelPanel CreateAndHostPanel()
@@ -52,14 +53,16 @@ namespace Mangosteen.Test
         [Fact]
         public async Task WheelPanel_Can_Be_Hosted()
         {
-            await AsyncHelpers.UIThread_Awaitable_Dispatch(() =>
-            {
-                var panel = CreateAndHostPanel();
+            //await AsyncHelpers.UIThread_Awaitable_Dispatch(() =>
+            //{
+            //    var panel = CreateAndHostPanel();
 
-                Assert.True(panel != null);
+            //    Assert.True(panel != null);
 
-                return null;
-            });
+            //    return null;
+            //});
+
+            Assert.True(false);
         }
 
         [Theory]
@@ -67,28 +70,30 @@ namespace Mangosteen.Test
         [InlineData(200, 100, 100)]
         public async Task Changing_Size_Does_Not_Change_Radius_If_Set(double widthheight, double outerradius, double value)
         {
-            await AsyncHelpers.UIThread_Awaitable_Dispatch(async () =>
-            {
-                var panel = CreateAndHostPanel();
+            //await AsyncHelpers.UIThread_Awaitable_Dispatch(async () =>
+            //{
+            //    var panel = CreateAndHostPanel();
 
-                panel.Width = 100;
-                panel.Height = 100;
+            //    panel.Width = 100;
+            //    panel.Height = 100;
 
-                await AwaitableUpdate(panel);
+            //    await AwaitableUpdate(panel);
 
-                Assert.True(panel.ActualRadius == 50);
+            //    Assert.True(panel.ActualRadius == 50);
                 
-                panel.OuterRadius = outerradius;
+            //    panel.OuterRadius = outerradius;
 
-                panel.Width = widthheight;
-                panel.Height = widthheight;
+            //    panel.Width = widthheight;
+            //    panel.Height = widthheight;
 
-                await AwaitableUpdate(panel);
+            //    await AwaitableUpdate(panel);
 
-                Assert.True(panel.ActualRadius == value);
+            //    Assert.True(panel.ActualRadius == value);
 
-                return null;
-            });
+            //    return null;
+            //});
+
+            Assert.True(false);
         }
 
         [Theory]
@@ -99,21 +104,23 @@ namespace Mangosteen.Test
         //
         // Width and height should set the radius unless an outerradius is defined
         //
-        public async Task Width_Height_Sets_Actual_Radius(double width, double height, double value)
+        public async void Width_Height_Sets_Actual_Radius(double width, double height, double value)
         {
-            await AsyncHelpers.UIThread_Awaitable_Dispatch(async () =>
-            {
-                var panel = CreateAndHostPanel();
+            //await AsyncHelpers.UIThread_Awaitable_Dispatch(async () =>
+            //{
+            //    var panel = CreateAndHostPanel();
 
-                panel.Width = width;
-                panel.Height = height;
+            //    panel.Width = width;
+            //    panel.Height = height;
 
-                await AwaitableUpdate(panel);
+            //    await AwaitableUpdate(panel);
 
-                Assert.True(panel.ActualRadius == value);
+            //    Assert.True(panel.ActualRadius == value);
 
-                return null;
-            });
+            //    return null;
+            //});
+
+            Assert.True(false);
         }
 
         [Theory]
@@ -124,52 +131,56 @@ namespace Mangosteen.Test
         //
         // Center should always be at the center of the width and height box.
         //
-        public async Task Width_Height_Sets_Center(double width, double height, double centerx, double centery)
+        public async void Width_Height_Sets_Center(double width, double height, double centerx, double centery)
         {
-            await AsyncHelpers.UIThread_Awaitable_Dispatch(async () =>
-            {
-                var panel = CreateAndHostPanel();
+            //await AsyncHelpers.UIThread_Awaitable_Dispatch(async () =>
+            //{
+            //    var panel = CreateAndHostPanel();
                 
-                panel.Width = width;
-                panel.Height = height;
+            //    panel.Width = width;
+            //    panel.Height = height;
 
-                await AwaitableUpdate(panel);
+            //    await AwaitableUpdate(panel);
 
-                Assert.True((panel.Center.X == centerx) && (panel.Center.Y == centery));
+            //    Assert.True((panel.Center.X == centerx) && (panel.Center.Y == centery));
 
-                return null;
-            });
+            //    return null;
+            //});
+
+            Assert.True(false);
         }
 
         [Fact]
-        public async Task Can_Add_4_Children()
+        public async void Can_Add_4_Children()
         {
-            await AsyncHelpers.UIThread_Awaitable_Dispatch(async () =>
-            {
-                var panel = CreateAndHostPanel();
+            //await AsyncHelpers.UIThread_Awaitable_Dispatch(async () =>
+            //{
+            //    var panel = CreateAndHostPanel();
 
-                Button[] buttons = new Button[4];
-                for (int i = 0; i < 4; i++)
-                {
-                    Button b = new Button();
-                    b.Name = String.Format("Button {0}", i);
-                    panel.Children.Add(b);
-                }
+            //    Button[] buttons = new Button[4];
+            //    for (int i = 0; i < 4; i++)
+            //    {
+            //        Button b = new Button();
+            //        b.Name = String.Format("Button {0}", i);
+            //        panel.Children.Add(b);
+            //    }
 
-                var task = LayoutUpdatedAsync.UpdateLayoutAsync(panel);
-                if (!task.IsCompleted)
-                {
-                    await task;
-                }
+            //    var task = LayoutUpdatedAsync.UpdateLayoutAsync(panel);
+            //    if (!task.IsCompleted)
+            //    {
+            //        await task;
+            //    }
 
-                Assert.True(panel.Children.Count == 4);
-                Assert.True(panel.Children[0].GetType() == typeof(Button));
+            //    Assert.True(panel.Children.Count == 4);
+            //    Assert.True(panel.Children[0].GetType() == typeof(Button));
 
-                Assert.True(false);
+            //    Assert.True(false);
 
-                return null;
-            });
+            //    return null;
+            //});
+
+            Assert.True(false);
         }
     }
-#endif
+
 }

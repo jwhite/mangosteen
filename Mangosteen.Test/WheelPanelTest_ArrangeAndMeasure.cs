@@ -14,11 +14,9 @@ using Xunit;
 
 namespace Mangosteen.Test
 {
-#if false   
+  
     public class WheelPanelTest_ArrangeAndMeasure
     {
-
-
         private static WheelPanel CreateAndHostPanel_180Degrees_ChildButtons()
         {
             Window nonVisibleMainWindow = Windows.UI.Xaml.Window.Current;
@@ -65,5 +63,4 @@ namespace Mangosteen.Test
             return p;
         }
     }
-#endif
 }
