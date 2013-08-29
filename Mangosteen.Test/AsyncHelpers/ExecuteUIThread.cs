@@ -45,31 +45,48 @@ namespace Mangosteen.Test
         }
 
         // This function accepts a lambda that has no parameters and returns void
+        // 
+        // This should be the only Action command we need as we can just call it like
+        //    () => SomeCommend(invariable);
+        //
         public static void ExecuteOnUIThread(Action expression)
         {
-          
+            CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+            dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => expression.Invoke()).AsTask().Wait();
         }
 
-        // This function accepts a lambda that takes one parameter and returns void
-        public static void ExecuteOnUIThread(Action<object> expression)
+        
+        // This function accepts a lambda that has zero parameters and returns an object
+        public static object ExecuteOnUIThread(Func<object> expression)
         {
+            CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+            Exception exceptionoccured = null;
+            object returnobject = null;
 
+            dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    try
+                    {
+                        returnobject = expression.Invoke();
+                    }
+                    catch (Exception e)
+                    {
+                        exceptionoccured = e;
+                    }
+                }).AsTask().Wait();
+
+
+            if (exceptionoccured != null)
+            {
+                // Rethrow the exception
+                // TODO : Will this overwrite the stack trace?  Or do I need to pack more?
+                throw new Exception("UI thread exception", exceptionoccured);
+            }
+
+            return returnobject;
         }
-
-        // This function accepts a lambda that takes one parameter and returns void
-        public static void ExecuteOnUIThread(Action<object,object> expression)
-        {
-
-        }
-
-        // This function accepts a lambda that has one of more parameters
-        public static object ExecuteOnUIThread<T>(Func<T,object> expression)
-        {
-            return null;
-        }
-
-
-
+        
         /// <summary>
         /// Executes a method on the UI thread using Invoke and waits for its completeion 
         /// before returning.
