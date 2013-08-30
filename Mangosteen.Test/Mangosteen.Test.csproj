@@ -115,11 +115,9 @@
   <ItemGroup>
     <Compile Include="AsyncHelpers\ExecuteUIThread.cs" />
     <Compile Include="AsyncHelpers\GetUIThread.cs" />
-    <Compile Include="AsyncHelpers\SymbolExtensions.cs" />
     <Compile Include="ExecuteUITests_UIFunctions.cs" />
     <Compile Include="GetUIThreadTests.cs" />
     <Compile Include="ExecuteUITests_CatchExceptions.cs" />
-    <Compile Include="SymbolExtensionsTests.cs" />
     <Compile Include="ExecuteUITests_NoUI.cs" />
     <Compile Include="WedgeAngleTest.cs" />
     <Compile Include="WedgeDefinitionTest.cs" />

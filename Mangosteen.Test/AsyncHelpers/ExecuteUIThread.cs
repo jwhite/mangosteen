@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +14,6 @@ using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Xunit;
-
 
 namespace Mangosteen.Test
 {
@@ -51,14 +51,50 @@ namespace Mangosteen.Test
         //
         public static void ExecuteOnUIThread(Action expression)
         {
+            // See if we can find the mainwindow
+            if (CoreApplication.MainView == null ||
+                CoreApplication.MainView.CoreWindow == null ||
+                CoreApplication.MainView.CoreWindow.Dispatcher == null)
+            {
+                throw new Exception("We don't have a valid UI dispatcher!");
+            }
+
             CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
-            dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => expression.Invoke()).AsTask().Wait();
+            Exception exceptionoccured = null;
+
+            dispatcher.RunAsync(CoreDispatcherPriority.Normal, 
+                () =>                   
+                {
+                    try
+                    {
+                        expression.Invoke();
+                    }
+                    catch (Exception e)
+                    {
+                        exceptionoccured = e;
+                    }
+                }).AsTask().Wait();
+
+            if (exceptionoccured != null)
+            {
+                // Rethrow the exception
+                // This should not overwrite the stack trace
+                ExceptionDispatchInfo.Capture(exceptionoccured).Throw();
+            }
         }
 
         
         // This function accepts a lambda that has zero parameters and returns an object
         public static object ExecuteOnUIThread(Func<object> expression)
         {
+            // See if we can find the mainwindow
+            if (CoreApplication.MainView == null ||
+                CoreApplication.MainView.CoreWindow == null ||
+                CoreApplication.MainView.CoreWindow.Dispatcher == null)
+            {
+                throw new Exception("We don't have a valid UI dispatcher!");
+            }
+
             CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
             Exception exceptionoccured = null;
             object returnobject = null;
@@ -72,16 +108,16 @@ namespace Mangosteen.Test
                     }
                     catch (Exception e)
                     {
+                        
                         exceptionoccured = e;
                     }
                 }).AsTask().Wait();
 
-
             if (exceptionoccured != null)
             {
                 // Rethrow the exception
-                // TODO : Will this overwrite the stack trace?  Or do I need to pack more?
-                throw new Exception("UI thread exception", exceptionoccured);
+                // This should not overwrite the stack trace
+                ExceptionDispatchInfo.Capture(exceptionoccured).Throw();
             }
 
             return returnobject;
@@ -89,13 +125,13 @@ namespace Mangosteen.Test
         
         /// <summary>
         /// Executes a method on the UI thread using Invoke and waits for its completeion 
-        /// before returning.
+        /// before returning.  This was the original execute method that the ms test tools use.
         /// </summary>
         /// <param name="method"></param>
         /// <param name="instance"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static object ExecuteOnUIThread(MethodInfo method, object instance, object [] args)
+        private static object ExecuteOnUIThread(MethodInfo method, object instance, object [] args)
         {
             Exception exceptionoccured = null;
             object returnobject = null;
@@ -118,7 +154,6 @@ namespace Mangosteen.Test
                 }
                 catch (Exception e)
                 {
-                    
                     exceptionoccured = e;
                 }
             }).AsTask().Wait();

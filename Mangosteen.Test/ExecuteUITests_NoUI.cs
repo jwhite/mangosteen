@@ -16,6 +16,28 @@ namespace Mangosteen.Test
 {
     public class ExecuteUITests_NoUI
     {
+        public void TestMethodReturnsVoidTakesNone()
+        {
+            _shouldBeSet = "How now brown cow";
+        }
+
+        public void TestMethodReturnsVoidTakesOne(int i)
+        {
+            _shouldBeSet = "How now brown cow " + i;
+        }
+
+        public object TestMethodReturnsObjectTakesNone()
+        {
+            _shouldBeSet = "How now brown cow";
+            return 66;
+        }
+
+        public object TestMethodReturnsObjectTakesOne(int i)
+        {
+            _shouldBeSet = "How now brown cow " + i;
+            return 55;
+        }
+
         // This test demonstrates that we can create different lambdas 
         // and they will match method signatures in the execute utility 
         // class.
@@ -29,8 +51,7 @@ namespace Mangosteen.Test
         public void TryToCall_ReturnsVoidTakesNone()
         {
             ExecuteUIThread.ExecuteOnUIThread(() => {
-                ExecuteUIThread.RealDelay(500);
-                _shouldBeSet = "How now brown cow"; 
+                TestMethodReturnsVoidTakesNone();
             });
 
             Assert.True(_shouldBeSet == "How now brown cow");
@@ -43,39 +64,35 @@ namespace Mangosteen.Test
 
             ExecuteUIThread.ExecuteOnUIThread(() =>
             {
-                ExecuteUIThread.RealDelay(500);
-                _shouldBeSet = "How now brown cow " + i;
+                TestMethodReturnsVoidTakesOne(i);
             });
 
             Assert.True(_shouldBeSet == "How now brown cow 5");
         }
-
-
 
         [Fact]
         public void TryToCall_ReturnsObjectTakesNone()
         {
             object retval = ExecuteUIThread.ExecuteOnUIThread(() =>
             {
-                _shouldBeSet = "How now brown cow";
-                return (int)11;
+                return TestMethodReturnsObjectTakesNone();
             });
 
-            Assert.True((int)retval == 11);
+            Assert.True((int)retval == 66);
             Assert.True(_shouldBeSet == "How now brown cow");
         }
 
         [Fact]
         public void TryToCall_ReturnsObjectTakesOne()
         {
+            int i = 22;
             object retval = ExecuteUIThread.ExecuteOnUIThread(() =>
             {
-                _shouldBeSet = "How now brown cow";
-                return (int)22;
+                return TestMethodReturnsObjectTakesOne(i);
             });
 
-            Assert.True((int)retval == 22);
-            Assert.True(_shouldBeSet == "How now brown cow");
+            Assert.True((int)retval == 55);
+            Assert.True(_shouldBeSet == "How now brown cow 22");
         }
 
 

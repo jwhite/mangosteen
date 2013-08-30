@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,70 +16,103 @@ namespace Mangosteen.Test.Images
             public ThrowTestException(string message) : base(message) { } 
         }
 
+        public void TestMethodReturnsVoidTakesNone()
+        {
+            Button b = new Button();
+            _shouldBeSet = "How now brown cow";
+
+            throw new ThrowTestException("message for the user");
+        }
+
+        public void TestMethodReturnsVoidTakesOne(int i)
+        {
+            Button b = new Button();
+            _shouldBeSet = "How now brown cow " + i;
+
+            throw new ThrowTestException("message for the user");
+        }
+
+        #pragma warning disable 162  // warning CS0162: Unreachable code detected
+        public object TestMethodReturnsObjectTakesNone()
+        {
+            Button b = new Button();
+            _shouldBeSet = "How now brown cow";
+            throw new ThrowTestException("message for the user");
+            
+            return 66;
+        }
+        #pragma warning restore 162
+
+
+        #pragma warning disable 162  // warning CS0162: Unreachable code detected
+        public object TestMethodReturnsObjectTakesOne(int i)
+        {
+            Button b = new Button();
+            _shouldBeSet = "How now brown cow " + i;
+            throw new ThrowTestException("message for the user");
+
+            return 55;
+        }
+        #pragma warning restore 162
+
+        //
+        // Tests start here......
+        //
+
         private string _shouldBeSet;
 
         [Fact]
-        public void TryToCall_TakesNoneReturnsVoid()
+        public void TryToCall_ReturnsVoidTakesNone()
         {
             Assert.Throws<ThrowTestException>(() =>
             {
                 ExecuteUIThread.ExecuteOnUIThread(() =>
                 {
-                    Button b = new Button();
-                    _shouldBeSet = "How now brown cow";
-
-                    throw new ThrowTestException("message for the user");
+                    TestMethodReturnsVoidTakesNone();
                 });
            });
         }
 
         [Fact]
-        public void TryToCall_TakesOneReturnsVoid()
+        public void TryToCall_ReturnsVoidTakesOne()
         {
             Assert.Throws<ThrowTestException>(() =>
             {
                 int i = 7;
                 ExecuteUIThread.ExecuteOnUIThread(() =>
                 {
-                    Button b = new Button();
-                    _shouldBeSet = "How now brown cow " + i;
-
-                    throw new ThrowTestException("message for the user");
+                    TestMethodReturnsVoidTakesOne(i);
                 });
             });
         }
 
         [Fact]
-        public void TryToCall_TakesNoneReturnsObject()
+        #pragma warning disable 162  // warning CS0162: Unreachable code detected
+        public void TryToCall_ReturnsObjectTakesNone()
         {
             Assert.Throws<ThrowTestException>(() =>
             {
                 object retval = ExecuteUIThread.ExecuteOnUIThread(() =>
                 {
-                    Button b = new Button();
-                    _shouldBeSet = "How now brown cow";
-                    return (int)11;
-
-                    throw new ThrowTestException("message for the user");
+                    return TestMethodReturnsObjectTakesNone();
                 });
             });
         }
+        #pragma warning restore 162
 
         [Fact]
-        public void TryToCall_TakesOneReturnsObject()
+
+        public void TryToCall_ReturnsObjectTakesOne()
         {
             Assert.Throws<ThrowTestException>(() =>
             {
                 int i = 22;
                 object retval = ExecuteUIThread.ExecuteOnUIThread(() =>
                 {
-                    Button b = new Button();
-                    _shouldBeSet = "How now brown cow " + i;
-                    return (int)22;
-
-                    throw new ThrowTestException("message for the user");
+                    return TestMethodReturnsObjectTakesOne(i);
                 });
             });
         }
+        #pragma warning restore 162
     }
 }
